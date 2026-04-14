@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">Trail Companion</string>
+
+        <string name="north">N</string>
+        <string name="south">S</string>
+        <string name="east">E</string>
+        <string name="west">W</string>
+        <string name="meters">m</string>
+        <string name="hectopascal">hPa</string>
+        <string name="meters_per_second">m/sec</string>
+        <string name="meters_per_hour">m/hr</string>
+        <string name="meters_per_minute">m/min</string>
+        <string name="latitude">latitude</string>
+        <string name="longitude">longitude</string>
+        <string name="accuracy">accuracy</string>
+        <string name="air_pressure">air pressure</string>
+        <string name="GPS_altitude">GPS</string>
+        <string name="barometric_altitude">Baro</string>
+        <string name="GPS_speed">GPS speed</string>
+        <string name="GPS_bearing">GPS</string>
+        <string name="vertical_speed">Vertical Speed</string>
+        <string name="satellites">satellites</string>
+        <string name="used_in_fix">used in fix</string>
+        <string name="moonrise">moonrise</string>
+        <string name="moonset">moonset</string>
+        <string name="sunrise">sunrise</string>
+        <string name="sunset">sunset</string>
+        <string name="declination">declination</string>
+        <string name="sun_moon">Sun/Moon</string>
+        <string name="altitude">Altitude</string>
+        <string name="six_am">6 am</string>
+        <string name="noon">noon</string>
+        <string name="six_pm">6 pm</string>
+        <string name="sun">Sun</string>
+        <string name="moon">Moon</string>
+        <string name="gps">GPS</string>
+        <string name="kilometers">km</string>
+        <string name="magnetic">Magnetic</string>
+        <string name="compass">Compass</string>
+        <string name="magnetic_north">Magnetic North</string>
+        <string name="horizontal_speed">Horizontal Speed</string>
+        <string name="kilometers_per_hour">km/hr</string>
+        <string name="enable_fine_location">Please enable fine location</string>
+    </resources>
