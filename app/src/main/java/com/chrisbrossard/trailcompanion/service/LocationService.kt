@@ -114,7 +114,7 @@ class LocationService : Service() {
                         sendBroadcast(intent)
                     }
                 }
-                delay(5 * 1000)
+                delay(60 * 1000)
             }
         }
 

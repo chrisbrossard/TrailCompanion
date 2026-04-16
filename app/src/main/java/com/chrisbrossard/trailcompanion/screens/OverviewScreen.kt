@@ -5,6 +5,7 @@ import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
 import android.location.Location
 import android.os.Build
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -70,6 +71,7 @@ import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.PressureViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
@@ -87,12 +89,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.lang.Math.toRadians
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
+import kotlin.math.PI
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -144,7 +151,8 @@ fun OverviewScreen(
     locationSampleDao: LocationSampleDao,
     locationSessionCountViewModel: LocationSessionCountViewModel,
     navigationViewModel: NavigationViewModel,
-    chartDistanceViewModel: ChartDistanceViewModel
+    chartDistanceViewModel: ChartDistanceViewModel,
+    locationViewModel: LocationViewModel
 ) {
     var sunMoonOctant by remember { mutableStateOf("-") }
     var compassOctant by remember { mutableStateOf("-") }
@@ -169,8 +177,9 @@ fun OverviewScreen(
     val verticalSpeed by verticalSpeedViewModel.verticalSpeed.collectAsState()
     val vmPressure by pressureViewModel.pressure.collectAsState()
     val distance by distanceViewModel.distance.collectAsState()
-    val chartDistance by chartDistanceViewModel.distance.collectAsState()
+    //val chartDistance by chartDistanceViewModel.distance.collectAsState()
     val gPSAltitude by gPSAltitudeViewModel.altitude.collectAsState()
+    val location by locationViewModel.location.collectAsState()
 
     LaunchedEffect(Unit) {
         requestCurrentLocation(
@@ -182,6 +191,7 @@ fun OverviewScreen(
         sheetState.partialExpand()
         //}
     }
+
 
     /*val stepCount = stepSessionRowCount
     val altitudeCount = altitudeSessionRowCount
@@ -456,14 +466,13 @@ fun OverviewScreen(
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            var s = ""
                             //val s = String.format(Locale.US, "%.1fk", vmSteps / 1000)
-                            if (distance < 1000) {
-                                s = distance.toInt().toString()
+                            val s: String = if (distance < 1000) {
+                                distance.toInt().toString()
                             } else if (distance < 10000) {
-                                s = String.format(Locale.US, "%.1f", distance / 1000)
+                                String.format(Locale.US, "%.1f", distance / 1000)
                             } else {
-                                s = (distance / 1000).toInt().toString()
+                                (distance / 1000).toInt().toString()
                             }
                             BasicText(
                                 modifier = Modifier
@@ -481,12 +490,13 @@ fun OverviewScreen(
                                                 locationSessionIdViewModel.setSessionId(sessionId)
                                                 chartDistanceViewModel
                                                     .updateDistance(0f)
+                                                locationRecordingViewModel.updateRecording(
+                                                    MainActivity.Recording.STARTING.ordinal)
                                             } catch (e: Exception) {
                                                 Log.e("Trail Companion", "insert failed", e)
                                             }
                                         }
-                                        locationRecordingViewModel.updateRecording(
-                                            MainActivity.Recording.STARTING.ordinal)
+
                                         navController.navigate("distance_profile_recording")
                                     },
                                 text = s, //vmSteps.toInt().toString(),
@@ -594,6 +604,10 @@ fun OverviewScreen(
                                                 altitudeSessionIdViewModel.setSessionId(id)
                                                 chartDistanceViewModel
                                                     .updateDistance(0f)
+                                                altitudeRecordingViewModel.updateRecording(
+                                                    MainActivity.Recording.STARTING.ordinal
+                                                )
+
                                             } catch (e: Exception) {
                                                 Log.e(
                                                     "Trail Companion",
@@ -610,6 +624,9 @@ fun OverviewScreen(
                                                     )
                                                 )
                                                 gPSAltitudeSessionIdViewModel.setSessionId(id)
+                                                gPSAltitudeRecordingViewModel.updateRecording(
+                                                    MainActivity.Recording.STARTING.ordinal
+                                                )
                                             } catch (e: Exception) {
                                                 Log.e(
                                                     "Trail Companion",
@@ -620,12 +637,6 @@ fun OverviewScreen(
                                         }
                                         onNavigateToAltitudeRecording()
                                         //navController.navigate("altitude_profile_recording")
-                                        altitudeRecordingViewModel.updateRecording(
-                                            MainActivity.Recording.STARTING.ordinal
-                                        )
-                                        gPSAltitudeRecordingViewModel.updateRecording(
-                                            MainActivity.Recording.STARTING.ordinal
-                                        )
                                     },
                                 text = a.roundToInt().toString(),
                                 maxLines = 1,
@@ -644,6 +655,9 @@ fun OverviewScreen(
                                                         startTime = System.currentTimeMillis(),
                                                         endTime = 0L
                                                     )
+                                                )
+                                                altitudeRecordingViewModel.updateRecording(
+                                                    MainActivity.Recording.STARTING.ordinal
                                                 )
                                                 altitudeSessionIdViewModel.setSessionId(id)
                                                 chartDistanceViewModel
@@ -664,6 +678,9 @@ fun OverviewScreen(
                                                     )
                                                 )
                                                 gPSAltitudeSessionIdViewModel.setSessionId(id)
+                                                gPSAltitudeRecordingViewModel.updateRecording(
+                                                    MainActivity.Recording.STARTING.ordinal
+                                                )
                                             } catch (e: Exception) {
                                                 Log.e(
                                                     "Trail Companion",
@@ -673,12 +690,7 @@ fun OverviewScreen(
                                             }
                                         }
                                         onNavigateToAltitudeRecording()
-                                        altitudeRecordingViewModel.updateRecording(
-                                            MainActivity.Recording.STARTING.ordinal
-                                        )
-                                        gPSAltitudeRecordingViewModel.updateRecording(
-                                            MainActivity.Recording.STARTING.ordinal
-                                        )                                    }
+                                    }
                                     .weight(1.0f),
                                 text = gPSAltitude.toInt().toString(),
                                 maxLines = 1,
@@ -843,7 +855,7 @@ fun OverviewScreen(
                     }
                 }
             }*/
-            // Fourth Row
+            // Third Row
             Box(
                 modifier = Modifier
                     .weight(1.0f)
@@ -959,39 +971,67 @@ fun OverviewScreen(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (navigationViewModel.navigating) {
-                        val distance = location1.distanceTo(navigationViewModel.getWaypoint())
-                        if (distance < 20f) {
+                    /*if (navigationViewModel.navigating) {
+                        val distance = location.distanceTo(navigationViewModel.getWaypoint())
+                        if (distance < 0.0f) {
                             navigationViewModel.navigating = false
                         } else {
-                            val bearing = location1.bearingTo(navigationViewModel.getWaypoint())
-                            var s = ""
-                            when (bearing) {
+                            val waypoint = navigationViewModel.getWaypoint()
+                            val bearing = twoPointBearing(
+                                location.latitude,
+                                waypoint.latitude,
+                                location.longitude,
+                                waypoint.longitude
+                            ) * 180.0 / PI
+                            //var bearing = location1
+                            //    .bearingTo(navigationViewModel.getWaypoint())
+                            /*if (bearing < 0f) {
+                                bearing += 360f
+                            }*/
+                            /*bearing -= heading
+                            if (bearing < 0f) {
+                                bearing += 360f
+                            }*/
+                            val s = String.format(
+                                Locale.US,
+                                "Bearing: %.0f",
+                                bearing)
+                            /*when (bearing) {
                                 in 0f..22.5f -> {
                                     s = "Waypoint straight ahead"
                                 }
+
                                 in 22.5f..67.5f -> {
                                     s = "Waypoint slightly right"
                                 }
+
                                 in 67.5f..112.5f -> {
                                     s = "Waypoint to the right"
                                 }
+
                                 in 112.5f..247.5f -> {
                                     s = "Waypoint behind you"
                                 }
+
                                 in 247.5f..292.5f -> {
                                     s = "Waypoint to your left"
                                 }
+
                                 in 292.5f..337.5f -> {
                                     s = "Waypoint slightly left"
                                 }
+
                                 in 337.5f..360f -> {
                                     s = "Waypoint straight ahead"
                                 }
-                            }
+
+                                else -> {
+                                    s = String.format(Locale.US, "bearing error: %.0f", bearing)
+                                }
+                            }*/
                             Text(s)
                         }
-                    }
+                    }*/
                     BasicText(
                         modifier = Modifier.clickable {
                             navController.navigate("compass")
@@ -1006,6 +1046,44 @@ fun OverviewScreen(
             }
         }
     }
+}
+// calculate bearing of line between two points on a sphere
+fun twoPointBearing(
+    latitude1: Double,
+    latitude2: Double,
+    longitude1: Double,
+    longitude2: Double): Double {
+    val latitude1Radians = toRadians(latitude1)
+    val latitude2Radians = toRadians(latitude2)
+    val longitude1Radians = toRadians(longitude1)
+    val longitude2Radians = toRadians(longitude2)
+    //val deltaLatitude = latitude2Radians - latitude1Radians
+    val deltaLongitude = longitude2Radians - longitude1Radians
+
+    // haversine
+    val x = cos(latitude1Radians) * sin(latitude2Radians) -
+            sin(latitude1Radians) * cos(latitude2Radians) *
+            cos(deltaLongitude)
+    val y = sin(deltaLongitude) * cos(latitude2Radians)
+    val angle = atan2(y, x)
+
+    /*val x = deltaLongitude * cos(deltaLatitude / 2)
+    val angle = (x.pow(2) + deltaLatitude.pow(2)).pow(0.5)*/
+
+    /*val a = sin(deltaLatitude / 2).pow(2) +
+            cos(latitude1Radians) * cos(latitude2Radians) *
+            sin(deltaLongitude / 2).pow(2)
+    val angle = 2 * atan2(a.pow(0.5),(1 - a).pow(0.5))*/
+    //val angle = 2 * asin(a.pow(0.5))
+
+    /*val angle = atan2(
+        sin(deltaLongitude) * cos(latitude2Radians),
+        cos(latitude1Radians) * sin(latitude2Radians -
+        sin(latitude1Radians) * cos(latitude2Radians) * cos(deltaLongitude)))*/
+
+
+
+    return angle
 }
 
 //Text("world")

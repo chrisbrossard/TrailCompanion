@@ -46,7 +46,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
     private lateinit var altitudeSampleDao: AltitudeSampleDao
     //var sessionIdViewModel = SessionIdViewModel(application)
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         stepSampleDao = AppDatabase.getInstance(applicationContext).stepSampleDao()
@@ -69,7 +69,10 @@ class AltitudeStepsService : Service(), SensorEventListener {
         notification = NotificationCompat.Builder(this, "location_channel")
             .setContentTitle("Service Active")
             .build()
-        startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        startForeground(
+            notificationId,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_HEALTH)
 
         return START_STICKY
     }
@@ -140,7 +143,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
                     sessionId,
                     0L)
             }
-            if (now - periodStartTime > 5 * 1000) {
+            if (now - periodStartTime > 60 * 1000) {
                 periodStartTime = now
                 createAltitudeSample(
                     altitudeSampleDao,

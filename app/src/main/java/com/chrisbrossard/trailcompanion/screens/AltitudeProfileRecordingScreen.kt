@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import android.graphics.Color
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.chrisbrossard.trailcompanion.MainActivity
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
@@ -47,14 +46,12 @@ fun AltitudeProfileRecordingScreen(
     val sessionId = altitudeSessionIdViewModel.getSessionId()
     val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
 
-    BackHandler(enabled = true) {
-        //Log.d("Location and Compass", "Backhandler called")
+    BackHandler {
         altitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
         gPSAltitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
 
         navController.popBackStack("overview", false)
     }
-
 
     /*Scaffold(
         floatingActionButton = {

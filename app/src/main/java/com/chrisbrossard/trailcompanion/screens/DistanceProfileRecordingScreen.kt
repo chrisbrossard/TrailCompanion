@@ -1,7 +1,6 @@
 package com.chrisbrossard.trailcompanion.screens
 
 import android.graphics.Typeface
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import android.location.Location
+import androidx.activity.compose.BackHandler
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,20 +19,15 @@ import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSampleViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepSessionIdViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.highlight.Highlight
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-
 
 //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -53,7 +48,8 @@ fun DistanceProfileRecordingScreen(
 
     BackHandler(enabled = true) {
         locationRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
-        navController.popBackStack()
+
+        navController.popBackStack("overview", false)
     }
 
     /*Scaffold(
@@ -69,9 +65,7 @@ fun DistanceProfileRecordingScreen(
             }
         }
     ) { innerPadding ->*/
-    Column(
-        //modifier = Modifier.padding(innerPadding)
-    ) {
+    Column {
         Box(
             Modifier
                 .weight(0.1f)
@@ -155,7 +149,7 @@ fun DistanceProfileRecordingScreen(
                             chart.data = LineData(dataSet)
                             chart.setScaleEnabled(true)
                             val description = Description()
-                            description.text = "Distance Profile/n30 second update"
+                            description.text = "Distance Profile"
                             chart.description = description
                             /*chart.zoom(
                             1 / stepsTimes.size.toFloat(),

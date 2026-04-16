@@ -63,6 +63,7 @@ import com.chrisbrossard.trailcompanion.viewmodel.LocationSampleViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlin.time.ExperimentalTime
@@ -120,7 +121,8 @@ fun Navigation(
     locationSessionCountViewModel: LocationSessionCountViewModel,
     locationSampleViewModel: LocationSampleViewModel,
     navigationViewModel: NavigationViewModel,
-    chartDistanceViewModel: ChartDistanceViewModel
+    chartDistanceViewModel: ChartDistanceViewModel,
+    locationViewModel: LocationViewModel
 ) {
     var location1 by remember { mutableStateOf(Location("")) }
 
@@ -185,7 +187,8 @@ fun Navigation(
                 locationSampleDao,
                 locationSessionCountViewModel,
                 navigationViewModel,
-                chartDistanceViewModel = chartDistanceViewModel
+                chartDistanceViewModel = chartDistanceViewModel,
+                locationViewModel = locationViewModel
             )
         }
         composable("sun_moon") {

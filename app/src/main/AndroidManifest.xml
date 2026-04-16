@@ -6,10 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
 
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true" />
     <uses-feature android:name="android.hardware.sensor.magnetic_field" android:required="true" />
@@ -37,12 +36,12 @@
         </activity>
         <service
             android:name=".service.LocationService"
-            android:foregroundServiceType="location|dataSync"
+            android:foregroundServiceType="location"
             android:exported="false">
         </service>
         <service
             android:name=".service.AltitudeStepsService"
-            android:foregroundServiceType="location|dataSync"
+            android:foregroundServiceType="health"
             android:exported="false">
         </service>
     </application>

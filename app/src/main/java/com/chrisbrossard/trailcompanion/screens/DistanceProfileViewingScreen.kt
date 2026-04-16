@@ -132,20 +132,20 @@ fun DistanceProfileViewingScreen(
                             val dataSet = LineDataSet(entries, "set").apply {
                             }
                             dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-                            dataSet.label = "distance m, tap circle to navigate"
+                            dataSet.label = "distance m"
                             //dataSet.setDrawFilled(true)
                             //dataSet.fillColor = 0x964B00
                             //dataSet.fillAlpha = 128
                             //dataSet.setDrawCircles(false)
                             dataSet.setDrawValues(false)
-                            dataSet.setCircleColor(Color.RED)
+                            //dataSet.setCircleColor(Color.RED)
                             dataSet.lineWidth = 4.0f
                             chart.data = LineData(dataSet)
                             chart.setScaleEnabled(true)
                             val description = Description()
                             description.text = "Distance Profile"
                             chart.description = description
-                            chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
+                            /*chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
                                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                                     //var sampleId = 0
                                     if (e != null) {
@@ -169,7 +169,7 @@ fun DistanceProfileViewingScreen(
 
                                 override fun onNothingSelected() {
                                 }
-                            })
+                            })*/
                             /*chart.zoom(
                             1 / stepsTimes.size.toFloat(),
                             1f,

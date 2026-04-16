@@ -89,6 +89,7 @@ import com.chrisbrossard.trailcompanion.viewmodel.LocationSampleViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
 
 class MainActivity : ComponentActivity(), SensorEventListener {
@@ -199,7 +200,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         locationSessionCountViewModel,
                         locationSampleViewModel,
                         navigationViewModel,
-                        chartDistanceViewModel
+                        chartDistanceViewModel,
+                        locationViewModel
                     )
                 }
             }
@@ -208,6 +210,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
             intent = Intent(this, AltitudeStepsService::class.java)
             ContextCompat.startForegroundService(this, intent)
+
         }
 
     private lateinit var sensorManager: SensorManager
@@ -305,6 +308,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     private val distanceViewModel: DistanceViewModel by viewModels()
     private val chartDistanceViewModel: ChartDistanceViewModel by viewModels()
     private val gPSAltitudeViewModel: GPSAltitudeViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
 
     private var currentLocation: Location = Location("")
     var gpsAltitudeStartTime = 0L
@@ -318,6 +322,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             location.latitude = intent.getDoubleExtra("latitude", 0.0)
             location.longitude = intent.getDoubleExtra("longitude", 0.0)
             location.altitude = intent.getDoubleExtra("altitude", 0.0)
+
+            locationViewModel.updateLocation(location)
 
             val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
             val gpsAltitudeRecording = sharedPreferences.getInt(
@@ -572,7 +578,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         locationSessionCountViewModel,
                         locationSampleViewModel,
                         navigationViewModel,
-                        chartDistanceViewModel
+                        chartDistanceViewModel,
+                        locationViewModel
                     )
                 }
             }
@@ -593,7 +600,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     Log.d("Location and Compass", string)
                 }
             ContextCompat.startForegroundService(this, safeIntent)
-        }
+            }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
