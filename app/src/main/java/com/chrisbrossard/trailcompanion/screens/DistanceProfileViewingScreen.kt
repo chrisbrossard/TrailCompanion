@@ -113,19 +113,19 @@ fun DistanceProfileViewingScreen(
                             var distance = 0f
                             var location = Location("")
                             for (sample in rowList) { //samples) {
-                                val newLocation = Location("")
-                                newLocation.latitude = sample.latitude
-                                newLocation.longitude = sample.longitude
-                                if (location.latitude != 0.0) {
-                                    distance += location.distanceTo(newLocation)
-                                }
-                                location = newLocation
-                                val entry = Entry(
-                                    sample.time.toFloat() /
-                                            (MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE),
-                                    distance
-                                )
                                 if (sessionId == sample.sessionId) {
+                                    val newLocation = Location("")
+                                    newLocation.latitude = sample.latitude
+                                    newLocation.longitude = sample.longitude
+                                    if (location.latitude != 0.0) {
+                                        distance += location.distanceTo(newLocation)
+                                    }
+                                    location = newLocation
+                                    val entry = Entry(
+                                        sample.time.toFloat() /
+                                                (MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE),
+                                        distance
+                                    )
                                     entries.add(entry)
                                 }
                             }

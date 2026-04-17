@@ -4,19 +4,13 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
-import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import com.chrisbrossard.trailcompanion.MainActivity.Recording
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -31,7 +25,7 @@ class LocationService : Service() {
     val client: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
     }
-    val locationCallback = object : LocationCallback() {
+    /*val locationCallback = object : LocationCallback() {
         @RequiresApi(Build.VERSION_CODES.O)
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -54,7 +48,7 @@ class LocationService : Service() {
     }
     inner class LocalBinder : Binder() {
         fun getService(): LocationService = this@LocationService
-    }
+    }*/
     var serviceJob: Job? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -98,22 +92,29 @@ class LocationService : Service() {
         serviceJob = CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
                 val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-                val recording = sharedPreferences.getInt(
+                val locationRecording = sharedPreferences.getInt(
+                    "location_recording",
+                    -1
+                )
+                val gpsAltitudeRecording = sharedPreferences.getInt(
                     "gps_altitude_recording",
                     -1
                 )
-                client.getCurrentLocation(
-                    Priority.PRIORITY_HIGH_ACCURACY,
-                    CancellationTokenSource().token
-                ).addOnSuccessListener { location ->
-                    if (location != null) {
-                        val intent = Intent("com.chrisbrossard.trailcompanion.location")
-                        intent.putExtra("latitude", location.latitude)
-                        intent.putExtra("longitude", location.longitude)
-                        intent.putExtra("altitude", location.altitude)
-                        sendBroadcast(intent)
+                //if (locationRecording != Recording.OFF.ordinal ||
+                    //gpsAltitudeRecording != Recording.OFF.ordinal) {
+                    client.getCurrentLocation(
+                        Priority.PRIORITY_HIGH_ACCURACY,
+                        CancellationTokenSource().token
+                    ).addOnSuccessListener { location ->
+                        if (location != null) {
+                            val intent = Intent("com.chrisbrossard.trailcompanion.location")
+                            intent.putExtra("latitude", location.latitude)
+                            intent.putExtra("longitude", location.longitude)
+                            intent.putExtra("altitude", location.altitude)
+                            sendBroadcast(intent)
+                        }
                     }
-                }
+                //}
                 delay(60 * 1000)
             }
         }

@@ -5,7 +5,6 @@ import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
 import android.location.Location
 import android.os.Build
 import android.util.Log
-import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -89,17 +88,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import java.lang.Math.toRadians
+//import java.lang.Math.toRadians
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.math.atan2
-import kotlin.math.cos
+//import kotlin.math.atan2
+//import kotlin.math.cos
 import kotlin.math.roundToInt
-import kotlin.math.sin
+//import kotlin.math.sin
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
-import kotlin.math.PI
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -179,7 +177,7 @@ fun OverviewScreen(
     val distance by distanceViewModel.distance.collectAsState()
     //val chartDistance by chartDistanceViewModel.distance.collectAsState()
     val gPSAltitude by gPSAltitudeViewModel.altitude.collectAsState()
-    val location by locationViewModel.location.collectAsState()
+    //val location by locationViewModel.location.collectAsState()
 
     LaunchedEffect(Unit) {
         requestCurrentLocation(
@@ -1048,7 +1046,7 @@ fun OverviewScreen(
     }
 }
 // calculate bearing of line between two points on a sphere
-fun twoPointBearing(
+/*fun twoPointBearing(
     latitude1: Double,
     latitude2: Double,
     longitude1: Double,
@@ -1081,10 +1079,8 @@ fun twoPointBearing(
         cos(latitude1Radians) * sin(latitude2Radians -
         sin(latitude1Radians) * cos(latitude2Radians) * cos(deltaLongitude)))*/
 
-
-
     return angle
-}
+}*/
 
 //Text("world")
 //}

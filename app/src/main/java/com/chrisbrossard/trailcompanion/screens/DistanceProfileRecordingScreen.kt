@@ -104,31 +104,31 @@ fun DistanceProfileRecordingScreen(
                             var location = Location("")
                             //var index = 0
                             for (sample in rowList) { //samples) {
-                                val newLocation = Location("")
-                                newLocation.latitude = sample.latitude
-                                newLocation.longitude = sample.longitude
-                                if (location.latitude == 0.0) {
-                                    location.latitude = sample.latitude
-                                    location.longitude = sample.longitude
-                                }
-                                distance += location.distanceTo(newLocation)
-                                location = newLocation
-                                val x = sample.time.toFloat() /
-                                        (MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE)
-                                val entry = Entry(
-                                    x,
-                                    distance,
-                                    sample.locationId as Any
-                                )
-                                //entry.data = sample.locationId
                                 if (sessionId == sample.sessionId) {
+                                    val newLocation = Location("")
+                                    newLocation.latitude = sample.latitude
+                                    newLocation.longitude = sample.longitude
+                                    if (location.latitude == 0.0) {
+                                        location.latitude = sample.latitude
+                                        location.longitude = sample.longitude
+                                    }
+                                    distance += location.distanceTo(newLocation)
+                                    location = newLocation
+                                    val x = sample.time.toFloat() /
+                                            (MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE)
+                                    val entry = Entry(
+                                        x,
+                                        distance,
+                                        sample.locationId as Any
+                                    )
+                                    //entry.data = sample.locationId
                                     entries.add(entry)
                                 }
-                                val serviceScope =
+                                /*val serviceScope =
                                     CoroutineScope(SupervisorJob() + Dispatchers.IO)
                                 serviceScope.launch {
                                     locationSampleViewModel.setX(sample.locationId, x)
-                                }
+                                }*/
                             }
                             val dataSet = LineDataSet(entries, "set").apply {
                             }

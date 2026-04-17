@@ -32,7 +32,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepSensor: Sensor? = null
     private var pressureSensor: Sensor? = null
-    var periodicStartTime = 0L
+    //var periodicStartTime = 0L
     var stepsTime = 0L
     var startTime = 0L
     var periodStartTime = 0L
