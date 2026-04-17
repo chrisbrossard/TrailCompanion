@@ -119,7 +119,7 @@ fun Navigation(
     locationSessionListViewModel: LocationSessionListViewModel,
     locationSampleDao: LocationSampleDao,
     locationSessionCountViewModel: LocationSessionCountViewModel,
-    locationSampleViewModel: LocationSampleViewModel,
+    //locationSampleViewModel: LocationSampleViewModel,
     navigationViewModel: NavigationViewModel,
     chartDistanceViewModel: ChartDistanceViewModel,
     locationViewModel: LocationViewModel
@@ -270,8 +270,8 @@ fun Navigation(
                 locationListViewModel,
                 //stepRecordingViewModel,
                 locationSessionIdViewModel,
-                locationSampleViewModel,
-                navigationViewModel
+                //locationSampleViewModel,
+                //navigationViewModel
             )
         }
         composable("vertical_speed") {

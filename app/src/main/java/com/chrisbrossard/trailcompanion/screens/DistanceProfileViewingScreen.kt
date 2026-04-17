@@ -33,8 +33,8 @@ fun DistanceProfileViewingScreen(
     //locationRecordingViewModel: LocationRecordingViewModel,
     //navController: NavHostController,
     locationSessionIdViewModel: LocationSessionIdViewModel,
-    locationSampleViewModel: LocationSampleViewModel,
-    navigationViewModel: NavigationViewModel
+    //locationSampleViewModel: LocationSampleViewModel,
+    //navigationViewModel: NavigationViewModel
 ) {
     //val viewModel: MainActivity.StepListViewModel = viewModel()
     val rowList by locationListViewModel.rowList.collectAsState(initial = emptyList())

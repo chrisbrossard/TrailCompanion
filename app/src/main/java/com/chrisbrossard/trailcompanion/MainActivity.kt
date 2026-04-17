@@ -198,7 +198,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         locationSessionListViewModel,
                         locationSampleDao,
                         locationSessionCountViewModel,
-                        locationSampleViewModel,
+                        //locationSampleViewModel,
                         navigationViewModel,
                         chartDistanceViewModel,
                         locationViewModel
@@ -576,7 +576,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         locationSessionListViewModel,
                         locationSampleDao,
                         locationSessionCountViewModel,
-                        locationSampleViewModel,
+                        //locationSampleViewModel,
                         navigationViewModel,
                         chartDistanceViewModel,
                         locationViewModel
