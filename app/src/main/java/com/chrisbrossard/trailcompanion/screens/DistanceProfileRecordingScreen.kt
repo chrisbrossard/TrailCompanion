@@ -16,7 +16,6 @@ import androidx.navigation.NavHostController
 import com.chrisbrossard.trailcompanion.MainActivity
 import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.LocationSampleViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description

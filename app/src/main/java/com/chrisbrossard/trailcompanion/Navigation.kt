@@ -281,7 +281,7 @@ fun Navigation(
         }
     }
 
-    fun onNavigateToAltitudeRecording() {
+    /*fun onNavigateToAltitudeRecording() {
         navController.navigate("apr")
-    }
+    }*/
 }

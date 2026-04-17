@@ -1,7 +1,6 @@
 package com.chrisbrossard.trailcompanion.screens
 
 import android.graphics.Typeface
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,32 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import android.location.Location
-import android.graphics.Color
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.navigation.NavHostController
-import com.chrisbrossard.trailcompanion.MainActivity
 import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSampleViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepSessionIdViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.highlight.Highlight
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 
 //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
