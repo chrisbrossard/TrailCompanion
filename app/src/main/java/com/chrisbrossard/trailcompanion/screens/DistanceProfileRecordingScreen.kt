@@ -9,7 +9,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import android.location.Location
 import androidx.activity.compose.BackHandler
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -24,10 +23,7 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
+
 
 //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -39,7 +35,7 @@ fun DistanceProfileRecordingScreen(
     locationRecordingViewModel: LocationRecordingViewModel,
     navController: NavHostController,
     locationSessionIdViewModel: LocationSessionIdViewModel,
-    locationSampleViewModel: LocationSampleViewModel
+    //locationSampleViewModel: LocationSampleViewModel
 ) {
     //val viewModel: MainActivity.StepListViewModel = viewModel()
     val rowList by locationListViewModel.rowList.collectAsState(initial = emptyList())

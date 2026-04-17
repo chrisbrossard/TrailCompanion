@@ -259,7 +259,7 @@ fun Navigation(
                 locationRecordingViewModel,
                 navController,
                 locationSessionIdViewModel,
-                locationSampleViewModel
+                //locationSampleViewModel
             )
         }
         composable("distance_profile_viewing") {

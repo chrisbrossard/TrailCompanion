@@ -91,15 +91,15 @@ class LocationService : Service() {
 
         serviceJob = CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
-                val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-                val locationRecording = sharedPreferences.getInt(
+                //val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
+                /*val locationRecording = sharedPreferences.getInt(
                     "location_recording",
                     -1
                 )
                 val gpsAltitudeRecording = sharedPreferences.getInt(
                     "gps_altitude_recording",
                     -1
-                )
+                )*/
                 //if (locationRecording != Recording.OFF.ordinal ||
                     //gpsAltitudeRecording != Recording.OFF.ordinal) {
                     client.getCurrentLocation(
