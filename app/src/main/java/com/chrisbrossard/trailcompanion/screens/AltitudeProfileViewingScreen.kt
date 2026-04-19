@@ -2,6 +2,9 @@ package com.chrisbrossard.trailcompanion.screens
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.hardware.SensorManager
+import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
+import android.location.Location
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +18,13 @@ import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import kotlin.math.pow
 
 //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -28,12 +33,15 @@ fun AltitudeProfileViewingScreen(
     altitudeListViewModel: AltitudeListViewModel,
     altitudeSessionIdViewModel: AltitudeSessionIdViewModel,
     gPSAltitudeListViewModel: GPSAltitudeListViewModel,
-    gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel
+    gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
+    location: Location,
+    seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     val rowList by altitudeListViewModel.rowList.collectAsState(initial = emptyList())
     val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
     val sessionId = altitudeSessionIdViewModel.getSessionId()
     val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
+    val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
 
     //val altitudeViewModel: AltitudeViewModel = viewModel()
 
@@ -78,7 +86,17 @@ fun AltitudeProfileViewingScreen(
                     }
                     if (flag1 || flag2) {
                         for (sample in rowList) { //samples) {
-                            val entry = Entry(sample.time.toFloat() / (1000 * 60),
+                            /*var seaLevelPressure = PRESSURE_STANDARD_ATMOSPHERE
+                            if (location.altitude != 0.0) { //gPSAltitude != 0.0) {
+                                seaLevelPressure = (sample.pressure /
+                                        (1 - location.altitude / 44330.0).pow(5.255)).toFloat()
+                            }*/
+                            /*val a = SensorManager.getAltitude(
+                                seaLevelPressure, //SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+                                sample.pressure
+                            )*/
+                            val entry = Entry(
+                                sample.time.toFloat() / (1000 * 60),
                                 sample.altitude)
                             if (sample.sessionId == sessionId) {
                                 entries.add(entry)
@@ -88,7 +106,7 @@ fun AltitudeProfileViewingScreen(
                         }
                         //chart.data = LineData(dataSet)
                         dataSet1.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-                        dataSet1.label = "Baro Altitudes (m)"
+                        dataSet1.label = "Altitudes (m)"
                         //dataSet.setDrawFilled(true)
                         //dataSet.fillColor = 0x00FF00
                         //dataSet.fillAlpha = 128
@@ -96,9 +114,11 @@ fun AltitudeProfileViewingScreen(
                         //dataSet1.setDrawCircles(false)
                         dataSet1.setDrawValues(false)
 
-                        entries = ArrayList()
+                        /*entries = ArrayList()
                         for (sample in gPSRowList) { //samples) {
-                            val entry = Entry(sample.time.toFloat() / (1000 * 60),
+
+                            val entry = Entry(
+                                sample.time.toFloat() / (1000 * 60),
                                 sample.altitude)
                             if (sample.sessionId == gPSSessionId) {
                                 entries.add(entry)
@@ -113,15 +133,15 @@ fun AltitudeProfileViewingScreen(
                         //dataSet.fillColor = 0x00FF00
                         //dataSet.fillAlpha = 128
                         dataSet2.setColor(Color.MAGENTA)
-                        dataSet2.setCircleColor(Color.MAGENTA)
+                        daataSet2.setCircleColor(Color.MAGENTA)
                         dataSet2.lineWidth = 4.0f
                         //dataSet2.setDrawCircles(false)
-                        dataSet2.setDrawValues(false)
+                        dataSet2.setDrawValues(false)*/
 
-                        chart.data = LineData(dataSet1, dataSet2)
+                        chart.data = LineData(dataSet1) //, dataSet2)
                         chart.setScaleEnabled(true)
                         val description = Description()
-                        description.text = "Baro / GPS Altitude Profile"
+                        description.text = "Altitude Profile"
                         chart.description = description
                         /*chart.zoom(
                             1 / altitudes.size.toFloat(),

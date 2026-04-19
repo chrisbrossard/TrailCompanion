@@ -59,12 +59,12 @@ import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.LocationSampleViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlin.time.ExperimentalTime
 
@@ -122,7 +122,8 @@ fun Navigation(
     //locationSampleViewModel: LocationSampleViewModel,
     navigationViewModel: NavigationViewModel,
     chartDistanceViewModel: ChartDistanceViewModel,
-    locationViewModel: LocationViewModel
+    locationViewModel: LocationViewModel,
+    seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     var location1 by remember { mutableStateOf(Location("")) }
 
@@ -188,7 +189,8 @@ fun Navigation(
                 locationSessionCountViewModel,
                 navigationViewModel,
                 chartDistanceViewModel = chartDistanceViewModel,
-                locationViewModel = locationViewModel
+                locationViewModel = locationViewModel,
+                seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
         composable("sun_moon") {
@@ -217,7 +219,9 @@ fun Navigation(
                 altitudeSessionIdViewModel,
                 gPSAltitudeListViewModel = gPSAltitudeListViewModel,
                 gPSAltitudeSessionIdViewModel,
-                gPSAltitudeRecordingViewModel
+                gPSAltitudeRecordingViewModel,
+                location1,
+                seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
         composable("altitude_profile_viewing") {
@@ -226,7 +230,9 @@ fun Navigation(
                 altitudeListViewModel,
                 altitudeSessionIdViewModel,
                 gPSAltitudeListViewModel,
-                gPSAltitudeSessionIdViewModel
+                gPSAltitudeSessionIdViewModel,
+                location1,
+                seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
         composable("steps_profile_recording") {

@@ -23,5 +23,5 @@ data class AltitudeSample(
     @PrimaryKey(autoGenerate = true) val altitudeId: Int = 0,
     @ColumnInfo(name = "sessionId") val sessionId: Long, // links to session table
     @ColumnInfo(name = "time") val time: Long,
-    @ColumnInfo(name = "altitude") val altitude: Float
+    @ColumnInfo(name = "altitude") val altitude: Float,
 )

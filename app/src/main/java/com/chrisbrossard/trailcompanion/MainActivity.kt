@@ -3,6 +3,7 @@ package com.chrisbrossard.trailcompanion
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -16,15 +17,17 @@ import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
 import android.location.GnssStatus
 import android.location.Location
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -91,6 +94,7 @@ import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 
 class MainActivity : ComponentActivity(), SensorEventListener {
     val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
@@ -98,6 +102,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
     //private var cancellationTokenSource = CancellationTokenSource()
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     val requestPermissionLauncher =
         registerForActivityResult(
@@ -105,112 +110,108 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         ) { _ ->
             // permissions granted is not always correct.
             // Permissions must be checked manually
+
+            var locationGranted = false
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
-                ) !=
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                locationGranted = true
+            } else if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                val toast = Toast.makeText(
-                    this,
-                    "Please enable fine location",
-                    Toast.LENGTH_LONG
-                )
-                toast.show()
-                finish()
+                locationGranted = true
             }
+
+            var postGranted = false
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.POST_NOTIFICATIONS
-                ) !=
+                ) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                val toast = Toast.makeText(
-                    this,
-                    "Please enable post notifications",
-                    Toast.LENGTH_LONG
-                )
-                toast.show()
-                finish()
+                postGranted = true
             }
+
+            var activityGranted = false
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACTIVITY_RECOGNITION
-                ) !=
+                ) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                val toast = Toast.makeText(
-                    this,
-                    "Please enable activity recognition",
-                    Toast.LENGTH_LONG
-                )
-                toast.show()
-                finish()
+                activityGranted = true
             }
 
-            setContent {
-                val navController = rememberNavController()
-                TrailCompanionTheme {
-                    Navigation(
-                        client = fusedLocationProviderClient,
-                        //azimuth.floatValue,
-                        //pressure.floatValue,
-                        mutableGnssStatus,
-                        magnetometerAccuracy.intValue,
-                        //altitudeSlope.doubleValue,
-                        //sampledAltitudeDeque,
-                        //stepsDeque,
-                        //stepsTimesDeque,
-                        //stepsSlope.floatValue,
-                        altitudeSampleDao,
-                        stepSampleDao,
-                        stepSessionDao,
-                        altitudeSessionDao,
-                        //steps.intValue,
-                        stepCountViewModel,
-                        stepListViewModel,
-                        stepSessionCountViewModel,
-                        stepSessionListViewModel,
-                        stepSessionIdViewModel,
-                        stepRecordingViewModel,
-                        stepDeleteViewModel,
-                        altitudeListViewModel,
-                        altitudeSessionCountViewModel,
-                        altitudeSessionListViewModel,
-                        altitudeSessionIdViewModel,
-                        altitudeRecordingViewModel,
-                        altitudeDeleteViewModel,
-                        navController,
-                        headingViewModel,
-                        stepViewModel,
-                        verticalSpeedViewModel,
-                        pressureViewModel,
-                        distanceViewModel,
-                        gPSAltitudeViewModel,
-                        gPSAltitudeSessionDao,
-                        gPSAltitudeSessionIdViewModel,
-                        gPSAltitudeListViewModel,
-                        gPSAltitudeRecordingViewModel,
-                        locationListViewModel,
-                        locationRecordingViewModel,
-                        locationSessionIdViewModel,
-                        locationSessionDao,
-                        locationSessionListViewModel,
-                        locationSampleDao,
-                        locationSessionCountViewModel,
-                        //locationSampleViewModel,
-                        navigationViewModel,
-                        chartDistanceViewModel,
-                        locationViewModel
-                    )
+            if (locationGranted && postGranted && activityGranted) {
+                setContent {
+                    val navController = rememberNavController()
+                    TrailCompanionTheme {
+                        Navigation(
+                            client = fusedLocationProviderClient,
+                            //azimuth.floatValue,
+                            //pressure.floatValue,
+                            mutableGnssStatus,
+                            magnetometerAccuracy.intValue,
+                            //altitudeSlope.doubleValue,
+                            //sampledAltitudeDeque,
+                            //stepsDeque,
+                            //stepsTimesDeque,
+                            //stepsSlope.floatValue,
+                            altitudeSampleDao,
+                            stepSampleDao,
+                            stepSessionDao,
+                            altitudeSessionDao,
+                            //steps.intValue,
+                            stepCountViewModel,
+                            stepListViewModel,
+                            stepSessionCountViewModel,
+                            stepSessionListViewModel,
+                            stepSessionIdViewModel,
+                            stepRecordingViewModel,
+                            stepDeleteViewModel,
+                            altitudeListViewModel,
+                            altitudeSessionCountViewModel,
+                            altitudeSessionListViewModel,
+                            altitudeSessionIdViewModel,
+                            altitudeRecordingViewModel,
+                            altitudeDeleteViewModel,
+                            navController,
+                            headingViewModel,
+                            stepViewModel,
+                            verticalSpeedViewModel,
+                            pressureViewModel,
+                            distanceViewModel,
+                            gPSAltitudeViewModel,
+                            gPSAltitudeSessionDao,
+                            gPSAltitudeSessionIdViewModel,
+                            gPSAltitudeListViewModel,
+                            gPSAltitudeRecordingViewModel,
+                            locationListViewModel,
+                            locationRecordingViewModel,
+                            locationSessionIdViewModel,
+                            locationSessionDao,
+                            locationSessionListViewModel,
+                            locationSampleDao,
+                            locationSessionCountViewModel,
+                            //locationSampleViewModel,
+                            navigationViewModel,
+                            chartDistanceViewModel,
+                            locationViewModel,
+                            seaLevelPressureViewModel,
+                        )
+                    }
                 }
+                intent = Intent(this, LocationService::class.java)
+                ContextCompat.startForegroundService(this, intent)
+
+                intent = Intent(this, AltitudeStepsService::class.java)
+                ContextCompat.startForegroundService(this, intent)
             }
-            intent = Intent(this, LocationService::class.java)
-            ContextCompat.startForegroundService(this, intent)
-
-            intent = Intent(this, AltitudeStepsService::class.java)
-            ContextCompat.startForegroundService(this, intent)
-
         }
 
     private lateinit var sensorManager: SensorManager
@@ -305,6 +306,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     private val stepViewModel: StepViewModel by viewModels()
     private val verticalSpeedViewModel: VerticalSpeedViewModel by viewModels()
     private val pressureViewModel: PressureViewModel by viewModels()
+    private val seaLevelPressureViewModel: SeaLevelPressureViewModel by viewModels()
     private val distanceViewModel: DistanceViewModel by viewModels()
     private val chartDistanceViewModel: ChartDistanceViewModel by viewModels()
     private val gPSAltitudeViewModel: GPSAltitudeViewModel by viewModels()
@@ -450,7 +452,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         gPSAltitudeSessionDao = database.gPSAltitudeSessionDao()
         gPSAltitudeSessionCountViewModel = GPSAltitudeSessionCountViewModel(gPSAltitudeSessionDao)
         gPSAltitudeSessionListViewModel = GPSAltitudeSessionListViewModel(
-            gPSAltitudeSessionDao)
+            gPSAltitudeSessionDao
+        )
         gPSAltitudeSessionIdViewModel = GPSAltitudeSessionIdViewModel(application)
         gPSAltitudeDeleteViewModel =
             GPSAltitudeDeleteViewModel(gPSAltitudeSampleDao, gPSAltitudeSessionDao)
@@ -492,8 +495,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             }
         }
 
-        var granted = true
-
         val permissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -501,31 +502,44 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             Manifest.permission.POST_NOTIFICATIONS
         )
 
+        var locationGranted = false
         if (ContextCompat.checkSelfPermission(
                 this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) !=
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) ==
             PackageManager.PERMISSION_GRANTED
         ) {
-            granted = false
+            locationGranted = true
         } else if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            locationGranted = true
+        }
+
+        var postGranted = false
+        if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.POST_NOTIFICATIONS
-            ) !=
+            ) ==
             PackageManager.PERMISSION_GRANTED
         ) {
-            granted = false
-        } else if (ContextCompat.checkSelfPermission(
+            postGranted = true
+        }
+
+        var activityGranted = false
+        if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACTIVITY_RECOGNITION
-            ) !=
+            ) ==
             PackageManager.PERMISSION_GRANTED
         ) {
-            granted = false
+            activityGranted = true
         }
-        if (!granted) {
-            requestPermissionLauncher.launch(permissions)
-        } else {
+
+        if (locationGranted && postGranted && activityGranted) {
             setContent {
                 val navController = rememberNavController()
                 TrailCompanionTheme {
@@ -579,7 +593,8 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         //locationSampleViewModel,
                         navigationViewModel,
                         chartDistanceViewModel,
-                        locationViewModel
+                        locationViewModel,
+                        seaLevelPressureViewModel
                     )
                 }
             }
@@ -600,7 +615,9 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     Log.d("Location and Compass", string)
                 }
             ContextCompat.startForegroundService(this, safeIntent)
-            }
+        } else {
+            requestPermissionLauncher.launch(permissions)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -609,7 +626,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         Log.d("Trail Companion", "onStart() called ")
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @SuppressLint("MissingPermission")
     override fun onResume() {
         super.onResume()
@@ -625,7 +642,16 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             ContextCompat.checkSelfPermission(this, it) !=
                     PackageManager.PERMISSION_GRANTED
         }
-        if (fineMissingPermissions.isEmpty()) {
+        val coarseRequiredPermissions = arrayOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACTIVITY_RECOGNITION,
+            Manifest.permission.POST_NOTIFICATIONS,
+        )
+        val coarseMissingPermissions = coarseRequiredPermissions.filter {
+            ContextCompat.checkSelfPermission(this, it) !=
+                    PackageManager.PERMISSION_GRANTED
+        }
+        if (fineMissingPermissions.isEmpty() || coarseMissingPermissions.isEmpty()) {
             accelerometer?.let {
                 sensorManager.registerListener(this, it, SensorManager.SENSOR_DELAY_UI)
             }
@@ -640,6 +666,80 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             }
             sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
             locationManager?.registerGnssStatusCallback(gnssStatusCallback, null)
+        } else {
+            val requiredPermissions = arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACTIVITY_RECOGNITION,
+                Manifest.permission.POST_NOTIFICATIONS,
+            )
+            if (shouldShowRequestPermissionRationale(
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Location permission")
+                builder.setMessage("Location permission required for basic app features")
+                builder.setPositiveButton("OK") { _, _ ->
+                    requestPermissionLauncher.launch(requiredPermissions)
+                }
+                builder.setNegativeButton("Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    startActivity(intent)
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            } else if (shouldShowRequestPermissionRationale(
+                Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Location permission")
+                builder.setMessage("Location permission required for basic app features")
+                builder.setPositiveButton("OK") { _, _ ->
+                    requestPermissionLauncher.launch(requiredPermissions)
+                }
+                builder.setNegativeButton("Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    startActivity(intent)
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            } else if (shouldShowRequestPermissionRationale(
+                Manifest.permission.POST_NOTIFICATIONS)) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Notification permission")
+                builder.setMessage("Notification permission required to create elevation and distance profiles")
+                builder.setPositiveButton("OK") { _, _ ->
+                    requestPermissionLauncher.launch(requiredPermissions)
+                }
+                builder.setNegativeButton("Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", packageName, null)
+                    }
+                    startActivity(intent)
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            } else if (shouldShowRequestPermissionRationale(
+                Manifest.permission.ACTIVITY_RECOGNITION)) {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Activity permission")
+                builder.setMessage("Activity permission required for step counting")
+                builder.setPositiveButton("OK") { _, _ ->
+                    requestPermissionLauncher.launch(requiredPermissions)
+                }
+                builder.setNegativeButton("Settings") { _, _ ->
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data =
+                            Uri.fromParts("package", packageName, null)
+                    }
+                    startActivity(intent)
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+            }
+
         }
     }
 

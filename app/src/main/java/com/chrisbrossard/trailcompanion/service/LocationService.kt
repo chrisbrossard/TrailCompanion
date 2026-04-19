@@ -6,8 +6,10 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
+import android.location.Location
 import android.os.Build
 import android.os.IBinder
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.DefaultTab.AlbumsTab.value
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,6 +22,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 class LocationService : Service() {
     val client: FusedLocationProviderClient by lazy {
@@ -101,20 +104,25 @@ class LocationService : Service() {
                     -1
                 )*/
                 //if (locationRecording != Recording.OFF.ordinal ||
-                    //gpsAltitudeRecording != Recording.OFF.ordinal) {
+                //gpsAltitudeRecording != Recording.OFF.ordinal) {
+                val location: Location = suspendCancellableCoroutine { continuation ->
                     client.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,
                         CancellationTokenSource().token
                     ).addOnSuccessListener { location ->
-                        if (location != null) {
-                            val intent = Intent("com.chrisbrossard.trailcompanion.location")
-                            intent.putExtra("latitude", location.latitude)
-                            intent.putExtra("longitude", location.longitude)
-                            intent.putExtra("altitude", location.altitude)
-                            sendBroadcast(intent)
-                        }
+                        continuation.resume(
+                            value = location
+                        ) { cause, _, _ -> TODO()
+                            (cause) }
                     }
-                //}
+                    //}
+                }
+                val intent = Intent("com.chrisbrossard.trailcompanion.location")
+                intent.putExtra("latitude", location.latitude)
+                intent.putExtra("longitude", location.longitude)
+                intent.putExtra("altitude", location.altitude)
+                sendBroadcast(intent)
+
                 delay(60 * 1000)
             }
         }
@@ -125,6 +133,27 @@ class LocationService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         serviceJob?.cancel()
+        stopSelf()
         //client.removeLocationUpdates(locationCallback)
     }
 }
+
+/*@SuppressLint("MissingPermission")
+suspend fun awaitLocation(): Location = suspendCancellableCoroutine { continuation ->
+    val client: FusedLocationProviderClient by lazy {
+        LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    client.getCurrentLocation(
+        Priority.PRIORITY_HIGH_ACCURACY,
+        CancellationTokenSource().token
+    ).addOnSuccessListener { location ->
+        if (location != null) {
+            val intent = Intent("com.chrisbrossard.trailcompanion.location")
+            intent.putExtra("latitude", location.latitude)
+            intent.putExtra("longitude", location.longitude)
+            intent.putExtra("altitude", location.altitude)
+            sendBroadcast(intent)
+        }
+    }
+}*/

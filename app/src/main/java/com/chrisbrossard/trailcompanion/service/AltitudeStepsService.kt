@@ -133,6 +133,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
                 return
             }
 
+            val seaLevelPressure = sharedPreferences.getFloat("sea_level_pressure", 0f)
             val now = System.currentTimeMillis()
             if (recording == Recording.STARTING.ordinal) {
                 startTime = now
@@ -140,14 +141,17 @@ class AltitudeStepsService : Service(), SensorEventListener {
                 createAltitudeSample(
                     altitudeSampleDao,
                     event.values[0],
+                    seaLevelPressure,
                     sessionId,
-                    0L)
+                    0L,
+                    )
             }
             if (now - periodStartTime > 60 * 1000) {
                 periodStartTime = now
                 createAltitudeSample(
                     altitudeSampleDao,
                     event.values[0],
+                    seaLevelPressure,
                     sessionId,
                     now - startTime)
             }
@@ -169,11 +173,12 @@ class AltitudeStepsService : Service(), SensorEventListener {
 fun createAltitudeSample(
     altitudeSampleDao: AltitudeSampleDao,
     pressure: Float,
+    seaLevelPressure: Float,
     sessionId: Long,
     time: Long
 ) {
     val a = SensorManager.getAltitude(
-        SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+        seaLevelPressure, //SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
         pressure
     )
     val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

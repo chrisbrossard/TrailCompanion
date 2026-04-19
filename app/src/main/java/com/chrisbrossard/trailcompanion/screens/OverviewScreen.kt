@@ -1,5 +1,7 @@
 package com.chrisbrossard.trailcompanion.screens
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.hardware.SensorManager
 import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
 import android.location.Location
@@ -39,7 +41,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.navigation.NavHostController
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionDao
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
@@ -73,6 +77,7 @@ import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.PressureViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepSessionIdViewModel
@@ -92,6 +97,7 @@ import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import kotlin.math.pow
 //import kotlin.math.atan2
 //import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -150,7 +156,8 @@ fun OverviewScreen(
     locationSessionCountViewModel: LocationSessionCountViewModel,
     navigationViewModel: NavigationViewModel,
     chartDistanceViewModel: ChartDistanceViewModel,
-    locationViewModel: LocationViewModel
+    locationViewModel: LocationViewModel,
+    seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     var sunMoonOctant by remember { mutableStateOf("-") }
     var compassOctant by remember { mutableStateOf("-") }
@@ -173,11 +180,13 @@ fun OverviewScreen(
     val heading by headingViewModel.heading.collectAsState()
     //val vmSteps by stepViewModel.steps.collectAsState()
     val verticalSpeed by verticalSpeedViewModel.verticalSpeed.collectAsState()
-    val vmPressure by pressureViewModel.pressure.collectAsState()
+    val vmPressure by pressureViewModel.pressure.collectAsState(initial = 0f)
     val distance by distanceViewModel.distance.collectAsState()
     //val chartDistance by chartDistanceViewModel.distance.collectAsState()
     val gPSAltitude by gPSAltitudeViewModel.altitude.collectAsState()
-    //val location by locationViewModel.location.collectAsState()
+    val location by locationViewModel.location.collectAsState()
+    val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState(
+        initial = PRESSURE_STANDARD_ATMOSPHERE)
 
     LaunchedEffect(Unit) {
         requestCurrentLocation(
@@ -189,7 +198,6 @@ fun OverviewScreen(
         sheetState.partialExpand()
         //}
     }
-
 
     /*val stepCount = stepSessionRowCount
     val altitudeCount = altitudeSessionRowCount
@@ -577,8 +585,21 @@ fun OverviewScreen(
                             },
                         contentAlignment = Alignment.Center
                     ) {
+                        if (seaLevelPressure == PRESSURE_STANDARD_ATMOSPHERE &&
+                            location.altitude != 0.0 &&
+                            vmPressure != 0f) { //gPSAltitude != 0.0) {
+                            val newPressure =
+                            (vmPressure /
+                                    (1 - location.altitude / 44330.0).pow(5.255)).toFloat()
+                            seaLevelPressureViewModel.updatePressure(newPressure)
+                            val sharedPreferences: SharedPreferences =
+                                LocalContext.current.getSharedPreferences("my_app", Context.MODE_PRIVATE)
+                            sharedPreferences.edit {
+                                putFloat("sea_level_pressure", newPressure)
+                            }
+                        }
                         val a = SensorManager.getAltitude(
-                            PRESSURE_STANDARD_ATMOSPHERE,
+                            seaLevelPressure, //PRESSURE_STANDARD_ATMOSPHERE,
                             vmPressure
                         )
                         Column(
@@ -586,7 +607,7 @@ fun OverviewScreen(
                         ) {
                             BasicText(
                                 modifier = Modifier
-                                    .weight(1.0f)
+                                    //.weight(1.0f)
                                     .clickable {
                                         val serviceScope =
                                             CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -613,7 +634,7 @@ fun OverviewScreen(
                                                     e
                                                 )
                                             }
-                                            try {
+                                            /*try {
                                                 val id = gPSAltitudeSessionDao.insert(
                                                     GPSAltitudeSession(
                                                         //sessionId = altitudeSessionId,
@@ -631,7 +652,7 @@ fun OverviewScreen(
                                                     "GPS altitude session insert failed",
                                                     e
                                                 )
-                                            }
+                                            }*/
                                         }
                                         onNavigateToAltitudeRecording()
                                         //navController.navigate("altitude_profile_recording")
@@ -640,7 +661,7 @@ fun OverviewScreen(
                                 maxLines = 1,
                                 autoSize = TextAutoSize.StepBased()
                             )
-                            BasicText(
+                            /*BasicText(
                                 modifier = Modifier
                                     .clickable {
                                         val serviceScope =
@@ -690,11 +711,12 @@ fun OverviewScreen(
                                         onNavigateToAltitudeRecording()
                                     }
                                     .weight(1.0f),
-                                text = gPSAltitude.toInt().toString(),
+                                //text = gPSAltitude.toInt().toString(),
+                                text = location1.altitude.toInt().toString(),
                                 maxLines = 1,
                                 autoSize = TextAutoSize.StepBased()
-                            )
-                            Text("Baro/GPS Altitude m")
+                            )*/
+                            Text("Altitude m")
                             //Text("Tap to Record")
                         }
                     }
