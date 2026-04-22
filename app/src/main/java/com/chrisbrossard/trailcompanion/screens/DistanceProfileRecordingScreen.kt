@@ -128,7 +128,7 @@ fun DistanceProfileRecordingScreen(
                             val dataSet = LineDataSet(entries, "set").apply {
                             }
                             dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-                            dataSet.label = "distance m"
+                            dataSet.label = "distance (m)"
                             //dataSet.setDrawFilled(true)
                             //dataSet.fillColor = 0x964B00
                             //dataSet.fillAlpha = 128

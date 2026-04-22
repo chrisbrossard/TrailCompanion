@@ -60,9 +60,7 @@ fun StepsProfileRecordingScreen(
             }
         }
     ) { innerPadding ->*/
-    Column(
-        //modifier = Modifier.padding(innerPadding)
-    ) {
+    Column {
         Box(
             Modifier
                 .weight(0.1f)

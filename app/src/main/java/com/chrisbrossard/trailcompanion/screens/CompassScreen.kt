@@ -1,5 +1,7 @@
 package com.chrisbrossard.trailcompanion.screens
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.hardware.GeomagneticField
 import android.hardware.SensorManager
 import android.location.Location
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.chrisbrossard.trailcompanion.R
 import com.chrisbrossard.trailcompanion.viewmodel.HeadingViewModel

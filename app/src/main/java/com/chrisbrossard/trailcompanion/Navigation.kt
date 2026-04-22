@@ -20,8 +20,8 @@ import com.chrisbrossard.trailcompanion.data.AltitudeSampleDao
 import com.chrisbrossard.trailcompanion.data.AltitudeSessionDao
 import com.chrisbrossard.trailcompanion.data.LocationSampleDao
 import com.chrisbrossard.trailcompanion.data.LocationSessionDao
-import com.chrisbrossard.trailcompanion.data.StepSampleDao
-import com.chrisbrossard.trailcompanion.data.StepSessionDao
+//import com.chrisbrossard.trailcompanion.data.StepSampleDao
+//import com.chrisbrossard.trailcompanion.data.StepSessionDao
 import com.chrisbrossard.trailcompanion.screens.AltitudeProfileRecordingScreen
 import com.chrisbrossard.trailcompanion.screens.AltitudeProfileViewingScreen
 import com.chrisbrossard.trailcompanion.screens.CompassScreen
@@ -29,8 +29,8 @@ import com.chrisbrossard.trailcompanion.screens.DistanceProfileRecordingScreen
 import com.chrisbrossard.trailcompanion.screens.DistanceProfileViewingScreen
 import com.chrisbrossard.trailcompanion.screens.GNSSScreen
 import com.chrisbrossard.trailcompanion.screens.OverviewScreen
-import com.chrisbrossard.trailcompanion.screens.StepsProfileRecordingScreen
-import com.chrisbrossard.trailcompanion.screens.StepsProfileViewingScreen
+//import com.chrisbrossard.trailcompanion.screens.StepsProfileRecordingScreen
+//import com.chrisbrossard.trailcompanion.screens.StepsProfileViewingScreen
 import com.chrisbrossard.trailcompanion.screens.SunMoonScreen
 import com.chrisbrossard.trailcompanion.screens.VerticalSpeedScreen
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeDeleteViewModel
@@ -42,21 +42,21 @@ import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.ChartDistanceViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.HeadingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.PressureViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
+/*import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepDeleteViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.StepListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepViewModel*/
 import com.chrisbrossard.trailcompanion.viewmodel.VerticalSpeedViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.DistanceViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
+/*import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionDao
 import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel*/
 import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionCountViewModel
@@ -84,17 +84,17 @@ fun Navigation(
     //stepsTimesDeque: ArrayDeque<Long>,
     //stepsSpeed: Float,
     altitudeSampleDao: AltitudeSampleDao,
-    stepSampleDao: StepSampleDao,
-    stepSessionDao: StepSessionDao,
+    //stepSampleDao: StepSampleDao,
+    //stepSessionDao: StepSessionDao,
     altitudeSessionDao: AltitudeSessionDao,
     //steps: Int,
-    stepCountViewModel: StepCountViewModel,
+    /*stepCountViewModel: StepCountViewModel,
     stepListViewModel: StepListViewModel,
     stepSessionCountViewModel: StepSessionCountViewModel,
     stepSessionListViewModel: StepSessionListViewModel,
     stepSessionIdViewModel: StepSessionIdViewModel,
     stepRecordingViewModel: StepRecordingViewModel,
-    stepDeleteViewModel: StepDeleteViewModel,
+    stepDeleteViewModel: StepDeleteViewModel,*/
     altitudeListViewModel: AltitudeListViewModel,
     altitudeSessionCountViewModel: AltitudeSessionCountViewModel,
     altitudeSessionListViewModel: AltitudeSessionListViewModel,
@@ -103,15 +103,15 @@ fun Navigation(
     altitudeDeleteViewModel: AltitudeDeleteViewModel,
     navController: NavHostController,
     headingViewModel: HeadingViewModel,
-    stepViewModel: StepViewModel,
+    //stepViewModel: StepViewModel,
     verticalSpeedViewModel: VerticalSpeedViewModel,
     pressureViewModel: PressureViewModel,
     distanceViewModel: DistanceViewModel,
-    gPSAltitudeViewModel: GPSAltitudeViewModel,
+    /*gPSAltitudeViewModel: GPSAltitudeViewModel,
     gPSAltitudeSessionDao: GPSAltitudeSessionDao,
     gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
     gPSAltitudeListViewModel: GPSAltitudeListViewModel,
-    gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,
+    gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,*/
     locationListViewModel: LocationListViewModel,
     locationRecordingViewModel: LocationRecordingViewModel,
     locationSessionIdViewModel: LocationSessionIdViewModel,
@@ -152,17 +152,17 @@ fun Navigation(
                 //stepsDeque,
                 //stepsSpeed,
                 altitudeSampleDao,
-                stepSampleDao,
-                stepSessionDao,
+                //stepSampleDao,
+                //stepSessionDao,
                 altitudeSessionDao,
                 //steps,
-                stepCountViewModel,
+                /*stepCountViewModel,
                 stepListViewModel,
                 stepSessionCountViewModel,
                 stepSessionListViewModel,
                 stepSessionIdViewModel,
                 stepRecordingViewModel,
-                stepDeleteViewModel,
+                stepDeleteViewModel,*/
                 altitudeListViewModel,
                 altitudeSessionCountViewModel,
                 altitudeSessionListViewModel,
@@ -172,14 +172,14 @@ fun Navigation(
                 onNavigateToAltitudeRecording = {
                     navController.navigate("altitude_profile_recording") },
                 headingViewModel = headingViewModel,
-                stepViewModel = stepViewModel,
+                //stepViewModel = stepViewModel,
                 verticalSpeedViewModel = verticalSpeedViewModel,
                 pressureViewModel = pressureViewModel,
                 distanceViewModel = distanceViewModel,
-                gPSAltitudeViewModel = gPSAltitudeViewModel,
+                /*gPSAltitudeViewModel = gPSAltitudeViewModel,
                 gPSAltitudeSessionDao,
                 gPSAltitudeSessionIdViewModel,
-                gPSAltitudeRecordingViewModel,
+                gPSAltitudeRecordingViewModel,*/
                 locationListViewModel,
                 locationRecordingViewModel,
                 locationSessionIdViewModel,
@@ -217,11 +217,11 @@ fun Navigation(
                 altitudeRecordingViewModel,
                 navController,
                 altitudeSessionIdViewModel,
-                gPSAltitudeListViewModel = gPSAltitudeListViewModel,
-                gPSAltitudeSessionIdViewModel,
-                gPSAltitudeRecordingViewModel,
-                location1,
-                seaLevelPressureViewModel = seaLevelPressureViewModel
+                //gPSAltitudeListViewModel = gPSAltitudeListViewModel,
+                //gPSAltitudeSessionIdViewModel,
+                //gPSAltitudeRecordingViewModel,
+                //location1,
+                //seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
         composable("altitude_profile_viewing") {
@@ -229,24 +229,24 @@ fun Navigation(
                 //sampledAltitudes,
                 altitudeListViewModel,
                 altitudeSessionIdViewModel,
-                gPSAltitudeListViewModel,
-                gPSAltitudeSessionIdViewModel,
-                location1,
-                seaLevelPressureViewModel = seaLevelPressureViewModel
+                //gPSAltitudeListViewModel,
+                //gPSAltitudeSessionIdViewModel,
+                //location1,
+                //seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
-        composable("steps_profile_recording") {
+        /*composable("steps_profile_recording") {
             StepsProfileRecordingScreen(
                 //stepsDeque,
                 //stepsTimesDeque,
                 //stepSampleDao,
-                stepListViewModel,
-                stepRecordingViewModel,
+                //stepListViewModel,
+                //stepRecordingViewModel,
                 navController,
-                stepSessionIdViewModel
+                //stepSessionIdViewModel
             )
-        }
-        composable("steps_profile_viewing") {
+        }*/
+        /*composable("steps_profile_viewing") {
             StepsProfileViewingScreen(
                 //stepsDeque,
                 //stepsTimesDeque,
@@ -255,7 +255,7 @@ fun Navigation(
                 //stepRecordingViewModel,
                 stepSessionIdViewModel
             )
-        }
+        }*/
         composable("distance_profile_recording") {
             DistanceProfileRecordingScreen(
                 //stepsDeque,

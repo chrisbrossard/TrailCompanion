@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import com.chrisbrossard.trailcompanion.MainActivity
@@ -21,6 +22,5 @@ class SeaLevelPressureViewModel() : ViewModel() {
 
     fun updatePressure(newPressure: Float) {
         _pressure.value = newPressure
-
     }
 }

@@ -10,26 +10,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import android.graphics.Color
-import android.hardware.SensorManager
-import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
-import android.location.Location
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.chrisbrossard.trailcompanion.MainActivity
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import kotlin.math.pow
 
 //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -39,24 +34,24 @@ fun AltitudeProfileRecordingScreen(
     altitudeRecordingViewModel: AltitudeRecordingViewModel,
     navController: NavHostController,
     altitudeSessionIdViewModel: AltitudeSessionIdViewModel,
-    gPSAltitudeListViewModel: GPSAltitudeListViewModel,
-    gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
-    gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,
-    location: Location,
-    seaLevelPressureViewModel: SeaLevelPressureViewModel
+    //gPSAltitudeListViewModel: GPSAltitudeListViewModel,
+    //gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
+    //gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,
+    //location: Location,
+    //seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     //val altitudeListViewModel: AltitudeListViewModel = viewModel()
     val rowList by altitudeListViewModel.rowList.collectAsState(initial = emptyList())
-    val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
+    //val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
     //var clickedText by remember { mutableStateOf("Stop Recording") }
     //val altitudeViewModel: AltitudeViewModel = viewModel()
     val sessionId = altitudeSessionIdViewModel.getSessionId()
-    val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
-    val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
+    //val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
+    //val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
 
         BackHandler {
         altitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
-        gPSAltitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
+        //gPSAltitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
 
         navController.popBackStack("overview", false)
     }
@@ -92,7 +87,7 @@ fun AltitudeProfileRecordingScreen(
                 },
                 update = { chart ->
                     //if (altitudes.isNotEmpty()) {
-                    var entries = ArrayList<Entry>()
+                    val entries = ArrayList<Entry>()
                     /*var index = 0f
                         for (value in altitudes) {
                             entries.add(Entry(index, value.toFloat()))
@@ -105,14 +100,14 @@ fun AltitudeProfileRecordingScreen(
                             break
                         }
                     }
-                    var flag2 = false
+                    /*var flag2 = false
                     for (sample in gPSRowList) {
                         if (sessionId == sample.sessionId) {
                             flag2 = true
                             break
                         }
-                    }
-                    if (flag1 || flag2) {
+                    }*/
+                    if (flag1) { // || flag2) {
 
                         for (sample in rowList) { //samples) {
                             /*var seaLevelPressure = PRESSURE_STANDARD_ATMOSPHERE
@@ -173,6 +168,8 @@ fun AltitudeProfileRecordingScreen(
 
                         chart.data = LineData(dataSet1)//, dataSet2)
                         chart.setScaleEnabled(true)
+                        chart.setDrawGridBackground(false)
+                        chart.xAxis.setDrawAxisLine(false)
                         val description = Description()
                         description.text = "Altitude Profile"
                         chart.description = description

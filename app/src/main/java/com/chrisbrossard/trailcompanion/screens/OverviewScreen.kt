@@ -1,6 +1,7 @@
 package com.chrisbrossard.trailcompanion.screens
 
 import android.content.Context
+//import android.content.Intent
 import android.content.SharedPreferences
 import android.hardware.SensorManager
 import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
@@ -43,21 +44,23 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+//import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.navigation.NavHostController
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionDao
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionDao
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
 import com.chrisbrossard.trailcompanion.MainActivity
 import com.chrisbrossard.trailcompanion.data.AltitudeSampleDao
 import com.chrisbrossard.trailcompanion.data.AltitudeSession
 import com.chrisbrossard.trailcompanion.data.AltitudeSessionDao
-import com.chrisbrossard.trailcompanion.data.GPSAltitudeSession
+//import com.chrisbrossard.trailcompanion.data.GPSAltitudeSession
 import com.chrisbrossard.trailcompanion.data.LocationSampleDao
 import com.chrisbrossard.trailcompanion.data.LocationSession
 import com.chrisbrossard.trailcompanion.data.LocationSessionDao
 import com.chrisbrossard.trailcompanion.data.StepSampleDao
 import com.chrisbrossard.trailcompanion.data.StepSessionDao
 import com.chrisbrossard.trailcompanion.requestCurrentLocation
+//import com.chrisbrossard.trailcompanion.service.AltitudeStepsService
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeDeleteViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeRecordingViewModel
@@ -66,8 +69,8 @@ import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.ChartDistanceViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.DistanceViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.HeadingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
@@ -120,17 +123,17 @@ fun OverviewScreen(
     //stepsDeque: ArrayDeque<Long>,
     //stepsSpeed: Float,
     altitudeSampleDao: AltitudeSampleDao,
-    stepSampleDao: StepSampleDao,
-    stepSessionDao: StepSessionDao,
+    //stepSampleDao: StepSampleDao,
+    //stepSessionDao: StepSessionDao,
     altitudeSessionDao: AltitudeSessionDao,
     //steps: Int,
-    stepCountViewModel: StepCountViewModel,
+    /*stepCountViewModel: StepCountViewModel,
     stepListViewMode: StepListViewModel,
     stepSessionCountViewModel: StepSessionCountViewModel,
     stepSessionListViewModel: StepSessionListViewModel,
     stepSessionIdViewModel: StepSessionIdViewModel,
     stepRecordingViewModel: StepRecordingViewModel,
-    stepDeleteViewModel: StepDeleteViewModel,
+    stepDeleteViewModel: StepDeleteViewModel,*/
     altitudeListViewModel: AltitudeListViewModel,
     altitudeSessionCountViewModel: AltitudeSessionCountViewModel,
     altitudeSessionListViewModel: AltitudeSessionListViewModel,
@@ -139,14 +142,14 @@ fun OverviewScreen(
     altitudeDeleteViewModel: AltitudeDeleteViewModel,
     onNavigateToAltitudeRecording: () -> Unit,
     headingViewModel: HeadingViewModel,
-    stepViewModel: StepViewModel,
+    //stepViewModel: StepViewModel,
     verticalSpeedViewModel: VerticalSpeedViewModel,
     pressureViewModel: PressureViewModel,
     distanceViewModel: DistanceViewModel,
-    gPSAltitudeViewModel: GPSAltitudeViewModel,
+    /*gPSAltitudeViewModel: GPSAltitudeViewModel,
     gPSAltitudeSessionDao: GPSAltitudeSessionDao,
     gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
-    gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,
+    gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,*/
     locationListViewModel: LocationListViewModel,
     locationRecordingViewModel: LocationRecordingViewModel,
     locationSessionIdViewModel: LocationSessionIdViewModel,
@@ -183,12 +186,13 @@ fun OverviewScreen(
     val vmPressure by pressureViewModel.pressure.collectAsState(initial = 0f)
     val distance by distanceViewModel.distance.collectAsState()
     //val chartDistance by chartDistanceViewModel.distance.collectAsState()
-    val gPSAltitude by gPSAltitudeViewModel.altitude.collectAsState()
-    val location by locationViewModel.location.collectAsState()
+    //val gPSAltitude by gPSAltitudeViewModel.altitude.collectAsState()
+    //val location by locationViewModel.location.collectAsState()
     val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState(
         initial = PRESSURE_STANDARD_ATMOSPHERE)
 
-    LaunchedEffect(Unit) {
+    val context = LocalContext.current
+    LaunchedEffect(context) {
         requestCurrentLocation(
             client
         ) { location ->
@@ -197,6 +201,17 @@ fun OverviewScreen(
         //scope.launch() {
         sheetState.partialExpand()
         //}
+        /*if (seaLevelPressure == PRESSURE_STANDARD_ATMOSPHERE && vmPressure != 0f) {
+            val newPressure =
+                (vmPressure /
+                        (1 - location.altitude / 44330.0).pow(5.255)).toFloat()
+            seaLevelPressureViewModel.updatePressure(newPressure)
+            val sharedPreferences =
+                context.getSharedPreferences("my_app", Context.MODE_PRIVATE)
+            sharedPreferences.edit {
+                putFloat("sea_level_pressure", newPressure)
+            }
+        }*/
     }
 
     /*val stepCount = stepSessionRowCount
@@ -586,11 +601,11 @@ fun OverviewScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         if (seaLevelPressure == PRESSURE_STANDARD_ATMOSPHERE &&
-                            location.altitude != 0.0 &&
+                            location1.altitude != 0.0 &&
                             vmPressure != 0f) { //gPSAltitude != 0.0) {
                             val newPressure =
                             (vmPressure /
-                                    (1 - location.altitude / 44330.0).pow(5.255)).toFloat()
+                                    (1 - location1.altitude / 44330.0).pow(5.255)).toFloat()
                             seaLevelPressureViewModel.updatePressure(newPressure)
                             val sharedPreferences: SharedPreferences =
                                 LocalContext.current.getSharedPreferences("my_app", Context.MODE_PRIVATE)
@@ -634,6 +649,7 @@ fun OverviewScreen(
                                                     e
                                                 )
                                             }
+
                                             /*try {
                                                 val id = gPSAltitudeSessionDao.insert(
                                                     GPSAltitudeSession(
@@ -654,6 +670,7 @@ fun OverviewScreen(
                                                 )
                                             }*/
                                         }
+
                                         onNavigateToAltitudeRecording()
                                         //navController.navigate("altitude_profile_recording")
                                     },

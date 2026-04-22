@@ -12,6 +12,8 @@ import android.os.IBinder
 import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.DefaultTab.AlbumsTab.value
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import com.chrisbrossard.trailcompanion.MainActivity.Recording
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -23,6 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import androidx.core.content.edit
 
 class LocationService : Service() {
     val client: FusedLocationProviderClient by lazy {
@@ -94,17 +97,33 @@ class LocationService : Service() {
 
         serviceJob = CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
-                //val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-                /*val locationRecording = sharedPreferences.getInt(
+                val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
+                val locationRecording = sharedPreferences.getInt(
                     "location_recording",
                     -1
                 )
-                val gpsAltitudeRecording = sharedPreferences.getInt(
+                /*val gpsAltitudeRecording = sharedPreferences.getInt(
                     "gps_altitude_recording",
                     -1
                 )*/
                 //if (locationRecording != Recording.OFF.ordinal ||
                 //gpsAltitudeRecording != Recording.OFF.ordinal) {
+                /*if (locationRecording == Recording.STARTING.ordinal) {
+                    client.lastLocation
+                        .addOnSuccessListener { location: Location? ->
+                            if (location != null) {
+                                val intent = Intent("com.chrisbrossard.trailcompanion.location")
+                                intent.putExtra("latitude", location.latitude)
+                                intent.putExtra("longitude", location.longitude)
+                                intent.putExtra("altitude", location.altitude)
+                                sendBroadcast(intent)
+                            }
+                        }
+                    val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
+                    sharedPreferences.edit {
+                        putInt("location_recording", Recording.ON.ordinal)
+                    }
+                }*/
                 val location: Location = suspendCancellableCoroutine { continuation ->
                     client.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,
@@ -112,8 +131,10 @@ class LocationService : Service() {
                     ).addOnSuccessListener { location ->
                         continuation.resume(
                             value = location
-                        ) { cause, _, _ -> TODO()
-                            (cause) }
+                        ) { cause, _, _ ->
+                            TODO()
+                            (cause)
+                        }
                     }
                     //}
                 }
@@ -124,6 +145,7 @@ class LocationService : Service() {
                 sendBroadcast(intent)
 
                 delay(60 * 1000)
+                //}
             }
         }
 

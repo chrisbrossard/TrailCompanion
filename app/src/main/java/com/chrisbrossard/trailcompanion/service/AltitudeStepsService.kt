@@ -20,8 +20,8 @@ import com.chrisbrossard.trailcompanion.MainActivity.Recording
 import com.chrisbrossard.trailcompanion.data.AltitudeSample
 import com.chrisbrossard.trailcompanion.data.AltitudeSampleDao
 import com.chrisbrossard.trailcompanion.data.AppDatabase
-import com.chrisbrossard.trailcompanion.data.StepSample
-import com.chrisbrossard.trailcompanion.data.StepSampleDao
+//import com.chrisbrossard.trailcompanion.data.StepSample
+//import com.chrisbrossard.trailcompanion.data.StepSampleDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -33,7 +33,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
     private var stepSensor: Sensor? = null
     private var pressureSensor: Sensor? = null
     //var periodicStartTime = 0L
-    var stepsTime = 0L
+    //var stepsTime = 0L
     var startTime = 0L
     var periodStartTime = 0L
     //val updateSteps = 0
@@ -41,15 +41,15 @@ class AltitudeStepsService : Service(), SensorEventListener {
     val notificationId = 1
     lateinit var manager: NotificationManager
     lateinit var notification: Notification
-    private lateinit var stepSampleDao: StepSampleDao
-    var startSteps = 0L
+    //private lateinit var stepSampleDao: StepSampleDao
+    //var startSteps = 0L
     private lateinit var altitudeSampleDao: AltitudeSampleDao
     //var sessionIdViewModel = SessionIdViewModel(application)
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        stepSampleDao = AppDatabase.getInstance(applicationContext).stepSampleDao()
+        //stepSampleDao = AppDatabase.getInstance(applicationContext).stepSampleDao()
         altitudeSampleDao = AppDatabase.getInstance(applicationContext).altitudeSampleDao()
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -86,7 +86,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
+        /*if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
 
             val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
             val recording = sharedPreferences.getInt("step_recording",
@@ -121,7 +121,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
                     Log.e("Location and Compass", "step sample insert failed", e)
                 }
             }
-        } else if (event?.sensor?.type == Sensor.TYPE_PRESSURE) {
+        } else*/ if (event?.sensor?.type == Sensor.TYPE_PRESSURE) {
             val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
             val recording = sharedPreferences.getInt(
                 "altitude_recording",

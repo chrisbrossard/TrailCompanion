@@ -1,10 +1,10 @@
 package com.chrisbrossard.trailcompanion.screens
 
-import android.graphics.Color
+//import android.graphics.Color
 import android.graphics.Typeface
-import android.hardware.SensorManager
-import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
-import android.location.Location
+//import android.hardware.SensorManager
+//import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
+//import android.location.Location
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import kotlin.math.pow
+//import kotlin.math.pow
 
 //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -32,16 +32,16 @@ fun AltitudeProfileViewingScreen(
     //altitudes: ArrayDeque<Int>,
     altitudeListViewModel: AltitudeListViewModel,
     altitudeSessionIdViewModel: AltitudeSessionIdViewModel,
-    gPSAltitudeListViewModel: GPSAltitudeListViewModel,
-    gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
-    location: Location,
-    seaLevelPressureViewModel: SeaLevelPressureViewModel
+    //gPSAltitudeListViewModel: GPSAltitudeListViewModel,
+    //gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
+    //location: Location,
+    //seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     val rowList by altitudeListViewModel.rowList.collectAsState(initial = emptyList())
-    val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
+    //val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
     val sessionId = altitudeSessionIdViewModel.getSessionId()
-    val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
-    val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
+    //val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
+    //val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
 
     //val altitudeViewModel: AltitudeViewModel = viewModel()
 
@@ -64,7 +64,7 @@ fun AltitudeProfileViewingScreen(
                 },
                 update = { chart ->
                     //if (altitudes.isNotEmpty()) {
-                    var entries = ArrayList<Entry>()
+                    val entries = ArrayList<Entry>()
                     /*var index = 0f
                     for (value in altitudes) {
                         entries.add(Entry(index, value.toFloat()))
@@ -77,14 +77,14 @@ fun AltitudeProfileViewingScreen(
                             break
                         }
                     }
-                    var flag2 = false
+                    /*var flag2 = false
                     for (sample in gPSRowList) {
                         if (gPSSessionId == sample.sessionId) {
                             flag2 = true
                             break
                         }
-                    }
-                    if (flag1 || flag2) {
+                    }*/
+                    if (flag1) { // || flag2) {
                         for (sample in rowList) { //samples) {
                             /*var seaLevelPressure = PRESSURE_STANDARD_ATMOSPHERE
                             if (location.altitude != 0.0) { //gPSAltitude != 0.0) {
