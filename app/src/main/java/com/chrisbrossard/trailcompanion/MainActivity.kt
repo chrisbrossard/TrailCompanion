@@ -38,10 +38,6 @@ import androidx.navigation.compose.rememberNavController
 import com.chrisbrossard.trailcompanion.data.AltitudeSampleDao
 import com.chrisbrossard.trailcompanion.data.AltitudeSessionDao
 import com.chrisbrossard.trailcompanion.data.AppDatabase
-//import com.chrisbrossard.trailcompanion.data.GPSAltitudeSample
-//import com.chrisbrossard.trailcompanion.data.GPSAltitudeSampleDao
-import com.chrisbrossard.trailcompanion.data.StepSampleDao
-import com.chrisbrossard.trailcompanion.data.StepSessionDao
 import com.chrisbrossard.trailcompanion.service.AltitudeStepsService
 import com.chrisbrossard.trailcompanion.service.LocationService
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeDeleteViewModel
@@ -51,24 +47,8 @@ import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.DistanceViewModel
-/*import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeDeleteViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionCountViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionDao
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel*/
 import com.chrisbrossard.trailcompanion.viewmodel.PressureViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.HeadingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepCountViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepDeleteViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepSessionCountViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepSessionIdViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepSessionListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.StepViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.VerticalSpeedViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -100,17 +80,15 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
     }
-    //private var cancellationTokenSource = CancellationTokenSource()
-
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { _ ->
             // permissions granted is not always correct.
             // Permissions must be checked manually
-
             var locationGranted = false
             if (ContextCompat.checkSelfPermission(
                     this,
@@ -153,27 +131,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     TrailCompanionTheme {
                         Navigation(
                             client = fusedLocationProviderClient,
-                            //azimuth.floatValue,
-                            //pressure.floatValue,
                             mutableGnssStatus,
                             magnetometerAccuracy.intValue,
-                            //altitudeSlope.doubleValue,
-                            //sampledAltitudeDeque,
-                            //stepsDeque,
-                            //stepsTimesDeque,
-                            //stepsSlope.floatValue,
                             altitudeSampleDao,
-                            //stepSampleDao,
-                            //stepSessionDao,
                             altitudeSessionDao,
-                            //steps.intValue,
-                            /*stepCountViewModel,
-                            stepListViewModel,
-                            stepSessionCountViewModel,
-                            stepSessionListViewModel,
-                            stepSessionIdViewModel,
-                            stepRecordingViewModel,
-                            stepDeleteViewModel,*/
                             altitudeListViewModel,
                             altitudeSessionCountViewModel,
                             altitudeSessionListViewModel,
@@ -182,15 +143,9 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                             altitudeDeleteViewModel,
                             navController,
                             headingViewModel,
-                            //stepViewModel,
                             verticalSpeedViewModel,
                             pressureViewModel,
                             distanceViewModel,
-                            //gPSAltitudeViewModel,
-                            //gPSAltitudeSessionDao,
-                            //gPSAltitudeSessionIdViewModel,
-                            //gPSAltitudeListViewModel,
-                            //gPSAltitudeRecordingViewModel,
                             locationListViewModel,
                             locationRecordingViewModel,
                             locationSessionIdViewModel,
@@ -198,7 +153,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                             locationSessionListViewModel,
                             locationSampleDao,
                             locationSessionCountViewModel,
-                            //locationSampleViewModel,
                             navigationViewModel,
                             chartDistanceViewModel,
                             locationViewModel,
@@ -221,9 +175,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     private val magnetic = FloatArray(3)
     private val rotationMatrix = FloatArray(9)
     private val orientation = FloatArray(3)
-    //val azimuth = mutableFloatStateOf(-1f)
-    //val pressure = mutableFloatStateOf(0f)
-    var startSteps = 0L
     val arraySize = 40
     val accelerationX = FloatArray(arraySize)
     val accelerationY = FloatArray(arraySize)
@@ -236,57 +187,23 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     val altitudeTimeDeque = ArrayDeque<Long>()
     val smoothedAltitudeDeque = ArrayDeque<Float>()
-    //val sampledAltitudeDeque = ArrayDeque<Int>()
-    //val stepsDeque = ArrayDeque<Long>()
-    //val stepsTimesDeque = ArrayDeque<Long>()
-
-    //var stepsStartMillis = 0L
     var altitudeStartTime = 0L
-    //val altitudeSlope = mutableDoubleStateOf(0.0)
-
-    //val stepsSlope = mutableFloatStateOf(0f)
     private var pressureSensor: Sensor? = null
-    //private var stepSensor: Sensor? = null
     private var locationManager: LocationManager? = null
     lateinit var gnssStatusCallback: GnssStatus.Callback
     val magnetometerAccuracy = mutableIntStateOf(0)
     var mutableGnssStatus by mutableStateOf<GnssStatus?>(null)
 
-    //val updateSteps: Int = 0
-    //val updateAltitude = 1
-    //val steps = mutableIntStateOf(0)
-
     lateinit var database: AppDatabase
-    /*lateinit var stepSampleDao: StepSampleDao
-    lateinit var stepCountViewModel: StepCountViewModel
-    lateinit var stepListViewModel: StepListViewModel*/
 
     lateinit var altitudeSampleDao: AltitudeSampleDao
     lateinit var altitudeListViewModel: AltitudeListViewModel
-    //lateinit var gPSAltitudeSampleDao: GPSAltitudeSampleDao
-    //lateinit var gPSAltitudeListViewModel: GPSAltitudeListViewModel
-    //lateinit var stepSessionDao: StepSessionDao
     lateinit var altitudeSessionDao: AltitudeSessionDao
-    //lateinit var gPSAltitudeSessionDao: GPSAltitudeSessionDao
-
-    /*lateinit var stepSessionCountViewModel: StepSessionCountViewModel
-    lateinit var stepSessionListViewModel: StepSessionListViewModel
-    lateinit var stepSessionIdViewModel: StepSessionIdViewModel
-    lateinit var stepDeleteViewModel: StepDeleteViewModel*/
-
     lateinit var altitudeSessionCountViewModel: AltitudeSessionCountViewModel
     lateinit var altitudeSessionListViewModel: AltitudeSessionListViewModel
     lateinit var altitudeSessionIdViewModel: AltitudeSessionIdViewModel
     lateinit var altitudeDeleteViewModel: AltitudeDeleteViewModel
-    /*lateinit var gPSAltitudeSessionCountViewModel: GPSAltitudeSessionCountViewModel
-    lateinit var gPSAltitudeSessionListViewModel: GPSAltitudeSessionListViewModel
-    lateinit var gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel
-    lateinit var gPSAltitudeDeleteViewModel: GPSAltitudeDeleteViewModel*/
-
-    lateinit var stepRecordingViewModel: StepRecordingViewModel
     lateinit var altitudeRecordingViewModel: AltitudeRecordingViewModel
-    //lateinit var gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel
-
     lateinit var locationSampleDao: LocationSampleDao
     lateinit var locationSessionDao: LocationSessionDao
     lateinit var locationListViewModel: LocationListViewModel
@@ -303,17 +220,14 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
 
     private val headingViewModel: HeadingViewModel by viewModels()
-    //private val stepViewModel: StepViewModel by viewModels()
     private val verticalSpeedViewModel: VerticalSpeedViewModel by viewModels()
     private val pressureViewModel: PressureViewModel by viewModels()
     private val seaLevelPressureViewModel: SeaLevelPressureViewModel by viewModels()
     private val distanceViewModel: DistanceViewModel by viewModels()
     private val chartDistanceViewModel: ChartDistanceViewModel by viewModels()
-    //private val gPSAltitudeViewModel: GPSAltitudeViewModel by viewModels()
     private val locationViewModel: LocationViewModel by viewModels()
 
     private var currentLocation: Location = Location("")
-    //var gpsAltitudeStartTime = 0L
     var locationStartTime = 0L
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -328,48 +242,19 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             locationViewModel.updateLocation(location)
 
             val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-            /*val gpsAltitudeRecording = sharedPreferences.getInt(
-                "gps_altitude_recording",
-                -1
-            )*/
             val locationRecording = sharedPreferences.getInt(
                 "location_recording",
                 -1
             )
-            /*val gPSAltitudeSessionId = sharedPreferences.getLong(
-                "gps_altitude_session_id",
-                -1L)*/
             val locationSessionId = sharedPreferences.getLong(
                 "location_session_id",
                 -1L)
 
             val now = System.currentTimeMillis()
-            /*if (gpsAltitudeRecording == Recording.STARTING.ordinal) {
-                gpsAltitudeStartTime = now
-            }*/
             if (locationRecording == Recording.STARTING.ordinal) {
                 locationStartTime = now
             }
 
-            /*if (gpsAltitudeRecording != Recording.OFF.ordinal) {
-                val serviceScope1 = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-                serviceScope1.launch {
-                    try {
-                        gPSAltitudeSampleDao.insert(
-                            GPSAltitudeSample(
-                                sessionId = gPSAltitudeSessionId,
-                                time = now - gpsAltitudeStartTime,
-                                altitude = location.altitude.toFloat()
-                            )
-                        )
-                    } catch (e: Exception) {
-                        Log.e("Location and Compass", "altitude sample insert failed", e)
-                    }
-                }
-                sharedPreferences.edit {
-                    putInt("gps_altitude_recording", Recording.ON.ordinal)
-                }
-            }*/
             if (locationRecording != Recording.OFF.ordinal) {
                 val serviceScope2 = CoroutineScope(SupervisorJob() + Dispatchers.IO)
                 serviceScope2.launch {
@@ -395,27 +280,13 @@ class MainActivity : ComponentActivity(), SensorEventListener {
             if (currentLocation.latitude != 0.0) {
                 val delta = location.distanceTo(currentLocation)
                 distanceViewModel.updateDistance(delta)
-                //gPSAltitudeViewModel.updateAltitude(location.altitude)
             }
             currentLocation = location
-
-            /*GlobalScope.launch {
-                val pendingResult = goAsync()
-                try {
-                    val stepSample = StepSample(
-                        sessionId = 0L,
-                        time = 0L,
-                        steps = 0L
-                    )
-                    stepSampleDao.insert(stepSample)
-                } finally {
-                    pendingResult.finish()
-                }
-            }*/
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -429,37 +300,15 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
         database = AppDatabase.getInstance(this)
 
-        //stepSampleDao = database.stepSampleDao()
-        //stepCountViewModel = StepCountViewModel(stepSampleDao)
-        //stepListViewModel = StepListViewModel(stepSampleDao)
-
         altitudeSampleDao = database.altitudeSampleDao()
         altitudeListViewModel = AltitudeListViewModel(altitudeSampleDao)
-            //gPSAltitudeSampleDao = database.gPSAltitudeSampleDao()
-        //gPSAltitudeListViewModel = GPSAltitudeListViewModel(gPSAltitudeSampleDao)
-
-        /*stepSessionDao = database.stepSessionDao()
-        stepSessionCountViewModel = StepSessionCountViewModel(stepSessionDao)
-        stepSessionListViewModel = StepSessionListViewModel(stepSessionDao)
-        stepSessionIdViewModel = StepSessionIdViewModel(application)
-        stepDeleteViewModel = StepDeleteViewModel(stepSampleDao, stepSessionDao)*/
 
         altitudeSessionDao = database.altitudeSessionDao()
         altitudeSessionCountViewModel = AltitudeSessionCountViewModel(altitudeSessionDao)
         altitudeSessionListViewModel = AltitudeSessionListViewModel(altitudeSessionDao)
         altitudeSessionIdViewModel = AltitudeSessionIdViewModel(application)
         altitudeDeleteViewModel = AltitudeDeleteViewModel(altitudeSampleDao, altitudeSessionDao)
-        //gPSAltitudeSessionDao = database.gPSAltitudeSessionDao()
-        //gPSAltitudeSessionCountViewModel = GPSAltitudeSessionCountViewModel(gPSAltitudeSessionDao)
-        //gPSAltitudeSessionListViewModel = GPSAltitudeSessionListViewModel(
-        //    gPSAltitudeSessionDao)
-        //gPSAltitudeSessionIdViewModel = GPSAltitudeSessionIdViewModel(application)
-        //gPSAltitudeDeleteViewModel =
-        //    GPSAltitudeDeleteViewModel(gPSAltitudeSampleDao, gPSAltitudeSessionDao)
-
-        //stepRecordingViewModel = StepRecordingViewModel(application)
         altitudeRecordingViewModel = AltitudeRecordingViewModel(application)
-        //gPSAltitudeRecordingViewModel = GPSAltitudeRecordingViewModel(application)
 
         locationSampleDao = database.locationSampleDao()
         locationSessionDao = database.locationSessionDao()
@@ -476,7 +325,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         magneticField = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         pressureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE)
-        //stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
 
@@ -544,27 +392,10 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                 TrailCompanionTheme {
                     Navigation(
                         client = fusedLocationProviderClient,
-                        //azimuth.floatValue,
-                        //pressure.floatValue,
                         mutableGnssStatus,
                         magnetometerAccuracy.intValue,
-                        //altitudeSlope.doubleValue,
-                        //sampledAltitudeDeque,
-                        //stepsDeque,
-                        //stepsTimesDeque,
-                        //stepsSlope.floatValue,
                         altitudeSampleDao,
-                        //stepSampleDao,
-                        //stepSessionDao,
                         altitudeSessionDao,
-                        //steps.intValue,
-                        /*del,
-                        stepListViewModel,
-                        stepSessionCountViewModel,
-                        stepSessionListViewModel,
-                        stepSessionIdViewModel,
-                        stepRecordingViewModel,
-                        stepDeleteViewModel,*/
                         altitudeListViewModel,
                         altitudeSessionCountViewModel,
                         altitudeSessionListViewModel,
@@ -573,15 +404,9 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         altitudeDeleteViewModel,
                         navController,
                         headingViewModel,
-                        //stepViewModel,
-                        verticalSpeedViewModel,
+                       verticalSpeedViewModel,
                         pressureViewModel,
                         distanceViewModel,
-                        /*gPSAltitudeViewModel,
-                        gPSAltitudeSessionDao,
-                        gPSAltitudeSessionIdViewModel,
-                        gPSAltitudeListViewModel,
-                        gPSAltitudeRecordingViewModel,*/
                         locationListViewModel,
                         locationRecordingViewModel,
                         locationSessionIdViewModel,
@@ -589,7 +414,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         locationSessionListViewModel,
                         locationSampleDao,
                         locationSessionCountViewModel,
-                        //locationSampleViewModel,
                         navigationViewModel,
                         chartDistanceViewModel,
                         locationViewModel,
@@ -619,13 +443,12 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     override fun onStart() {
         super.onStart()
         Log.d("Trail Companion", "onStart() called ")
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
     override fun onResume() {
         super.onResume()
@@ -663,7 +486,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                     SensorManager.SENSOR_DELAY_NORMAL
                 )
             }
-            //sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
             if (ContextCompat.checkSelfPermission(
                     this,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -749,22 +571,23 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onPause() {
         super.onPause()
         // This code has to be here because onResume() and onPause() are called
         // as part of the permissions dialog.
         // We don't want these functions to do anything until permissions have been granted
-        val fineRequiredPermissions = arrayOf(
+        val requiredPermissions = arrayOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACTIVITY_RECOGNITION,
             Manifest.permission.POST_NOTIFICATIONS,
         )
-        val fineMissingPermissions = fineRequiredPermissions.filter {
+        val missingPermissions = requiredPermissions.filter {
             ContextCompat.checkSelfPermission(this, it) !=
                     PackageManager.PERMISSION_GRANTED
         }
-        if (fineMissingPermissions.isEmpty()) {
+        if (missingPermissions.isEmpty()) {
             sensorManager.unregisterListener(this)
             locationManager?.unregisterGnssStatusCallback(gnssStatusCallback)
         }
@@ -784,16 +607,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-
-        /*if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-            if (startSteps == 0L) {
-                startSteps = event.values[0].toLong()
-            }
-            //steps.intValue = (event.values[0].toLong() - startSteps).toInt()
-            stepViewModel.updateSteps(
-                ((event.values[0].toLong() - startSteps).toFloat())
-            )
-        }*/
         if (event?.sensor?.type == Sensor.TYPE_PRESSURE) {
             //pressure.floatValue = event.values[0]
             pressureViewModel.updatePressure(event.values[0])
@@ -1214,3 +1027,197 @@ startSteps: Int
             .build()
 */
 
+//import com.chrisbrossard.trailcompanion.data.GPSAltitudeSample
+//import com.chrisbrossard.trailcompanion.data.GPSAltitudeSampleDao
+//import com.chrisbrossard.trailcompanion.data.StepSampleDao
+//import com.chrisbrossard.trailcompanion.data.StepSessionDao
+/*import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeDeleteViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionCountViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionDao
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeViewModel*/
+/*import com.chrisbrossard.trailcompanion.viewmodel.StepCountViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepDeleteViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepRecordingViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepSessionCountViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepSessionIdViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepSessionListViewModel
+import com.chrisbrossard.trailcompanion.viewmodel.StepViewModel*/
+
+//azimuth.floatValue,
+//pressure.floatValue,
+//altitudeSlope.doubleValue,
+//sampledAltitudeDeque,
+//stepsDeque,
+//stepsTimesDeque,
+//stepsSlope.floatValue,
+//stepSampleDao,
+//stepSessionDao,
+//steps.intValue,
+/*stepCountViewModel,
+stepListViewModel,
+stepSessionCountViewModel,
+stepSessionListViewModel,
+stepSessionIdViewModel,
+stepRecordingViewModel,
+stepDeleteViewModel,*/
+//stepViewModel,
+//gPSAltitudeViewModel,
+//gPSAltitudeSessionDao,
+//gPSAltitudeSessionIdViewModel,
+//gPSAltitudeListViewModel,
+//gPSAltitudeRecordingViewModel,
+//locationSampleViewModel,
+
+//val azimuth = mutableFloatStateOf(-1f)
+//val pressure = mutableFloatStateOf(0f)
+//var startSteps = 0L
+//val sampledAltitudeDeque = ArrayDeque<Int>()
+//val stepsDeque = ArrayDeque<Long>()
+//val stepsTimesDeque = ArrayDeque<Long>()
+
+//var stepsStartMillis = 0L
+//val altitudeSlope = mutableDoubleStateOf(0.0)
+
+//val stepsSlope = mutableFloatStateOf(0f)
+//private var stepSensor: Sensor? = null
+//val updateSteps: Int = 0
+//val updateAltitude = 1
+//val steps = mutableIntStateOf(0)
+
+/*lateinit var stepSampleDao: StepSampleDao
+lateinit var stepCountViewModel: StepCountViewModel
+lateinit var stepListViewModel: StepListViewModel*/
+
+//lateinit var gPSAltitudeSampleDao: GPSAltitudeSampleDao
+//lateinit var gPSAltitudeListViewModel: GPSAltitudeListViewModel
+//lateinit var stepSessionDao: StepSessionDao
+//lateinit var gPSAltitudeSessionDao: GPSAltitudeSessionDao
+
+/*lateinit var stepSessionCountViewModel: StepSessionCountViewModel
+lateinit var stepSessionListViewModel: StepSessionListViewModel
+lateinit var stepSessionIdViewModel: StepSessionIdViewModel
+lateinit var stepDeleteViewModel: StepDeleteViewModel*/
+
+/*lateinit var gPSAltitudeSessionCountViewModel: GPSAltitudeSessionCountViewModel
+lateinit var gPSAltitudeSessionListViewModel: GPSAltitudeSessionListViewModel
+lateinit var gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel
+lateinit var gPSAltitudeDeleteViewModel: GPSAltitudeDeleteViewModel*/
+
+//lateinit var stepRecordingViewModel: StepRecordingViewModel
+//lateinit var gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel
+
+//private val stepViewModel: StepViewModel by viewModels()
+//private val gPSAltitudeViewModel: GPSAltitudeViewModel by viewModels()
+//var gpsAltitudeStartTime = 0L
+
+
+/*if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
+    if (startSteps == 0L) {
+        startSteps = event.values[0].toLong()
+    }
+    //steps.intValue = (event.values[0].toLong() - startSteps).toInt()
+    stepViewModel.updateSteps(
+        ((event.values[0].toLong() - startSteps).toFloat())
+    )
+}*/
+
+/*val gpsAltitudeRecording = sharedPreferences.getInt(
+    "gps_altitude_recording",
+    -1
+)*/
+/*val gPSAltitudeSessionId = sharedPreferences.getLong(
+    "gps_altitude_session_id",
+    -1L)*/
+/*if (gpsAltitudeRecording == Recording.STARTING.ordinal) {
+    gpsAltitudeStartTime = now
+}*/
+/*if (gpsAltitudeRecording != Recording.OFF.ordinal) {
+    val serviceScope1 = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    serviceScope1.launch {
+        try {
+            gPSAltitudeSampleDao.insert(
+                GPSAltitudeSample(
+                    sessionId = gPSAltitudeSessionId,
+                    time = now - gpsAltitudeStartTime,
+                    altitude = location.altitude.toFloat()
+                )
+            )
+        } catch (e: Exception) {
+            Log.e("Location and Compass", "altitude sample insert failed", e)
+        }
+    }
+    sharedPreferences.edit {
+        putInt("gps_altitude_recording", Recording.ON.ordinal)
+    }
+}*/
+
+//gPSAltitudeViewModel.updateAltitude(location.altitude)
+/*GlobalScope.launch {
+    val pendingResult = goAsync()
+    try {
+        val stepSample = StepSample(
+            sessionId = 0L,
+            time = 0L,
+            steps = 0L
+        )
+        stepSampleDao.insert(stepSample)
+    } finally {
+        pendingResult.finish()
+    }
+}*/
+
+//stepSampleDao = database.stepSampleDao()
+//stepCountViewModel = StepCountViewModel(stepSampleDao)
+//stepListViewModel = StepListViewModel(stepSampleDao)
+
+//gPSAltitudeSampleDao = database.gPSAltitudeSampleDao()
+//gPSAltitudeListViewModel = GPSAltitudeListViewModel(gPSAltitudeSampleDao)
+
+/*stepSessionDao = database.stepSessionDao()
+stepSessionCountViewModel = StepSessionCountViewModel(stepSessionDao)
+stepSessionListViewModel = StepSessionListViewModel(stepSessionDao)
+stepSessionIdViewModel = StepSessionIdViewModel(application)
+stepDeleteViewModel = StepDeleteViewModel(stepSampleDao, stepSessionDao)*/
+//gPSAltitudeSessionDao = database.gPSAltitudeSessionDao()
+//gPSAltitudeSessionCountViewModel = GPSAltitudeSessionCountViewModel(gPSAltitudeSessionDao)
+//gPSAltitudeSessionListViewModel = GPSAltitudeSessionListViewModel(
+//    gPSAltitudeSessionDao)
+//gPSAltitudeSessionIdViewModel = GPSAltitudeSessionIdViewModel(application)
+//gPSAltitudeDeleteViewModel =
+//    GPSAltitudeDeleteViewModel(gPSAltitudeSampleDao, gPSAltitudeSessionDao)
+
+//stepRecordingViewModel = StepRecordingViewModel(application)
+//gPSAltitudeRecordingViewModel = GPSAltitudeRecordingViewModel(application)
+//stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+//azimuth.floatValue,
+//pressure.floatValue,
+//altitudeSlope.doubleValue,
+//sampledAltitudeDeque,
+//stepsDeque,
+//stepsTimesDeque,
+//stepsSlope.floatValue,
+//stepSampleDao,
+//stepSessionDao,
+//steps.intValue,
+/*del,
+stepListViewModel,
+stepSessionCountViewModel,
+stepSessionListViewModel,
+stepSessionIdViewModel,
+stepRecordingViewModel,
+stepDeleteViewModel,*/
+//stepViewModel,
+/*gPSAltitudeViewModel,
+gPSAltitudeSessionDao,
+gPSAltitudeSessionIdViewModel,
+gPSAltitudeListViewModel,
+gPSAltitudeRecordingViewModel,*/
+//locationSampleViewModel,
+
+//sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)

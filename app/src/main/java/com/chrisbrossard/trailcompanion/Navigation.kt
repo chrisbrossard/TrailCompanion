@@ -68,33 +68,16 @@ import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import kotlin.time.ExperimentalTime
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
 @SuppressLint()
 @Composable
 fun Navigation(
     client: FusedLocationProviderClient,
-    //azimuth: Float,
-    //pressure: Float,
     gnssStatus: GnssStatus?,
     magnetometerAccuracy: Int,
-    //altitudeSlope: Double,
-    //sampledAltitudes: ArrayDeque<Int>,
-    //stepsDeque: ArrayDeque<Long>,
-    //stepsTimesDeque: ArrayDeque<Long>,
-    //stepsSpeed: Float,
     altitudeSampleDao: AltitudeSampleDao,
-    //stepSampleDao: StepSampleDao,
-    //stepSessionDao: StepSessionDao,
     altitudeSessionDao: AltitudeSessionDao,
-    //steps: Int,
-    /*stepCountViewModel: StepCountViewModel,
-    stepListViewModel: StepListViewModel,
-    stepSessionCountViewModel: StepSessionCountViewModel,
-    stepSessionListViewModel: StepSessionListViewModel,
-    stepSessionIdViewModel: StepSessionIdViewModel,
-    stepRecordingViewModel: StepRecordingViewModel,
-    stepDeleteViewModel: StepDeleteViewModel,*/
     altitudeListViewModel: AltitudeListViewModel,
     altitudeSessionCountViewModel: AltitudeSessionCountViewModel,
     altitudeSessionListViewModel: AltitudeSessionListViewModel,
@@ -103,15 +86,9 @@ fun Navigation(
     altitudeDeleteViewModel: AltitudeDeleteViewModel,
     navController: NavHostController,
     headingViewModel: HeadingViewModel,
-    //stepViewModel: StepViewModel,
     verticalSpeedViewModel: VerticalSpeedViewModel,
     pressureViewModel: PressureViewModel,
     distanceViewModel: DistanceViewModel,
-    /*gPSAltitudeViewModel: GPSAltitudeViewModel,
-    gPSAltitudeSessionDao: GPSAltitudeSessionDao,
-    gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
-    gPSAltitudeListViewModel: GPSAltitudeListViewModel,
-    gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,*/
     locationListViewModel: LocationListViewModel,
     locationRecordingViewModel: LocationRecordingViewModel,
     locationSessionIdViewModel: LocationSessionIdViewModel,
@@ -119,15 +96,12 @@ fun Navigation(
     locationSessionListViewModel: LocationSessionListViewModel,
     locationSampleDao: LocationSampleDao,
     locationSessionCountViewModel: LocationSessionCountViewModel,
-    //locationSampleViewModel: LocationSampleViewModel,
     navigationViewModel: NavigationViewModel,
     chartDistanceViewModel: ChartDistanceViewModel,
     locationViewModel: LocationViewModel,
     seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     var location1 by remember { mutableStateOf(Location("")) }
-
-    Log.d("Trail Companion", "Navigation() called")
 
     LaunchedEffect(Unit) {
         requestCurrentLocation(
@@ -144,25 +118,9 @@ fun Navigation(
             OverviewScreen(
                 client,
                 navController,
-                //altitudeSlope,
-                //pressure,
-                //azimuth,
                 magnetometerAccuracy,
-                //sampledAltitudes,
-                //stepsDeque,
-                //stepsSpeed,
-                altitudeSampleDao,
-                //stepSampleDao,
-                //stepSessionDao,
-                altitudeSessionDao,
-                //steps,
-                /*stepCountViewModel,
-                stepListViewModel,
-                stepSessionCountViewModel,
-                stepSessionListViewModel,
-                stepSessionIdViewModel,
-                stepRecordingViewModel,
-                stepDeleteViewModel,*/
+               altitudeSampleDao,
+               altitudeSessionDao,
                 altitudeListViewModel,
                 altitudeSessionCountViewModel,
                 altitudeSessionListViewModel,
@@ -172,14 +130,9 @@ fun Navigation(
                 onNavigateToAltitudeRecording = {
                     navController.navigate("altitude_profile_recording") },
                 headingViewModel = headingViewModel,
-                //stepViewModel = stepViewModel,
                 verticalSpeedViewModel = verticalSpeedViewModel,
                 pressureViewModel = pressureViewModel,
                 distanceViewModel = distanceViewModel,
-                /*gPSAltitudeViewModel = gPSAltitudeViewModel,
-                gPSAltitudeSessionDao,
-                gPSAltitudeSessionIdViewModel,
-                gPSAltitudeRecordingViewModel,*/
                 locationListViewModel,
                 locationRecordingViewModel,
                 locationSessionIdViewModel,
@@ -202,7 +155,6 @@ fun Navigation(
             CompassScreen(
                 navController,
                 location1,
-                //azimuth,
                 magnetometerAccuracy,
                 headingViewModel
             )
@@ -212,82 +164,132 @@ fun Navigation(
         }
         composable("altitude_profile_recording") {
             AltitudeProfileRecordingScreen(
-                //sampledAltitudes,
                 altitudeListViewModel,
                 altitudeRecordingViewModel,
                 navController,
                 altitudeSessionIdViewModel,
-                //gPSAltitudeListViewModel = gPSAltitudeListViewModel,
-                //gPSAltitudeSessionIdViewModel,
-                //gPSAltitudeRecordingViewModel,
-                //location1,
-                //seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
         composable("altitude_profile_viewing") {
             AltitudeProfileViewingScreen(
-                //sampledAltitudes,
                 altitudeListViewModel,
                 altitudeSessionIdViewModel,
-                //gPSAltitudeListViewModel,
-                //gPSAltitudeSessionIdViewModel,
-                //location1,
-                //seaLevelPressureViewModel = seaLevelPressureViewModel
             )
         }
-        /*composable("steps_profile_recording") {
-            StepsProfileRecordingScreen(
-                //stepsDeque,
-                //stepsTimesDeque,
-                //stepSampleDao,
-                //stepListViewModel,
-                //stepRecordingViewModel,
-                navController,
-                //stepSessionIdViewModel
-            )
-        }*/
-        /*composable("steps_profile_viewing") {
-            StepsProfileViewingScreen(
-                //stepsDeque,
-                //stepsTimesDeque,
-                //stepSampleDao,
-                stepListViewModel,
-                //stepRecordingViewModel,
-                stepSessionIdViewModel
-            )
-        }*/
         composable("distance_profile_recording") {
             DistanceProfileRecordingScreen(
-                //stepsDeque,
-                //stepsTimesDeque,
-                //stepSampleDao,
                 locationListViewModel,
                 locationRecordingViewModel,
                 navController,
                 locationSessionIdViewModel,
-                //locationSampleViewModel
             )
         }
         composable("distance_profile_viewing") {
             DistanceProfileViewingScreen(
-                //stepsDeque,
-                //stepsTimesDeque,
-                //stepSampleDao,
                 locationListViewModel,
-                //stepRecordingViewModel,
-                locationSessionIdViewModel,
-                //locationSampleViewModel,
-                //navigationViewModel
+               locationSessionIdViewModel,
             )
         }
         composable("vertical_speed") {
             VerticalSpeedScreen(
-                //altitudeSlope,
                 verticalSpeedViewModel)
         }
     }
-
     /*fun onNavigateToAltitudeRecording() {
         navController.navigate("apr")
     }*/
 }
+
+//azimuth: Float,
+//pressure: Float,
+//altitudeSlope: Double,
+//sampledAltitudes: ArrayDeque<Int>,
+//stepsDeque: ArrayDeque<Long>,
+//stepsTimesDeque: ArrayDeque<Long>,
+//stepsSpeed: Float,
+//stepSampleDao: StepSampleDao,
+//stepSessionDao: StepSessionDao,
+//steps: Int,
+/*stepCountViewModel: StepCountViewModel,
+stepListViewModel: StepListViewModel,
+stepSessionCountViewModel: StepSessionCountViewModel,
+stepSessionListViewModel: StepSessionListViewModel,
+stepSessionIdViewModel: StepSessionIdViewModel,
+stepRecordingViewModel: StepRecordingViewModel,
+stepDeleteViewModel: StepDeleteViewModel,*/
+//stepViewModel: StepViewModel,
+/*gPSAltitudeViewModel: GPSAltitudeViewModel,
+gPSAltitudeSessionDao: GPSAltitudeSessionDao,
+gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
+gPSAltitudeListViewModel: GPSAltitudeListViewModel,
+gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,*/
+//locationSampleViewModel: LocationSampleViewModel,
+
+//altitudeSlope,
+//pressure,
+//azimuth,
+//sampledAltitudes,
+//stepsDeque,
+//stepsSpeed,
+//stepSampleDao,
+//stepSessionDao,
+//steps,
+/*stepCountViewModel,
+stepListViewModel,
+stepSessionCountViewModel,
+stepSessionListViewModel,
+stepSessionIdViewModel,
+stepRecordingViewModel,
+stepDeleteViewModel,*/
+//stepViewModel = stepViewModel,
+/*gPSAltitudeViewModel = gPSAltitudeViewModel,
+gPSAltitudeSessionDao,
+gPSAltitudeSessionIdViewModel,
+gPSAltitudeRecordingViewModel,*/
+
+//sampledAltitudes,
+//gPSAltitudeListViewModel = gPSAltitudeListViewModel,
+//gPSAltitudeSessionIdViewModel,
+//gPSAltitudeRecordingViewModel,
+//location1,
+//seaLevelPressureViewModel = seaLevelPressureViewModel
+
+/*composable("steps_profile_recording") {
+    StepsProfileRecordingScreen(
+        //stepsDeque,
+        //stepsTimesDeque,
+        //stepSampleDao,
+        //stepListViewModel,
+        //stepRecordingViewModel,
+        navController,
+        //stepSessionIdViewModel
+    )
+}*/
+/*composable("steps_profile_viewing") {
+    StepsProfileViewingScreen(
+        //stepsDeque,
+        //stepsTimesDeque,
+        //stepSampleDao,
+        stepListViewModel,
+        //stepRecordingViewModel,
+        stepSessionIdViewModel
+    )
+}*/
+
+//sampledAltitudes,
+//gPSAltitudeListViewModel,
+//gPSAltitudeSessionIdViewModel,
+//location1,
+//seaLevelPressureViewModel = seaLevelPressureViewModel
+
+//stepsDeque,
+//stepsTimesDeque,
+//stepSampleDao,
+//locationSampleViewModel
+
+//stepsDeque,
+//stepsTimesDeque,
+//stepSampleDao,
+//stepRecordingViewModel,
+//locationSampleViewModel,
+//navigationViewModel

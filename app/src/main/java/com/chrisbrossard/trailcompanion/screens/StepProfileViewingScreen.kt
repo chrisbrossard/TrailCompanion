@@ -18,17 +18,11 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
-//@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun StepsProfileViewingScreen(
-    //steps: ArrayDeque<Long>,
-    //stepsTimes: ArrayDeque<Long>,
-    //stepSampleDao: StepSampleDao,
     stepListViewModel: StepListViewModel,
-    //stepRecordingViewModel: StepRecordingViewModel,
     stepSessionIdViewModel: StepSessionIdViewModel
 ) {
-    //val viewModel: MainActivity.StepListViewModel = viewModel()
     val rowList by stepListViewModel.rowList.collectAsState(initial = emptyList())
     val sessionId = stepSessionIdViewModel.getSessionId()
 
@@ -51,13 +45,6 @@ fun StepsProfileViewingScreen(
                         LineChart(context)
                     },
                     update = { chart ->
-                        //if (steps.isNotEmpty()) {
-                        /*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
-                            Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
-                        }
-                        val dataSet = LineDataSet(entries, "set").apply {
-                        }*/
-                        //val samples = stepSampleDao.getAll()
                         val entries = ArrayList<Entry>()
                         var flag = false
                         for (sample in rowList) {
@@ -91,13 +78,6 @@ fun StepsProfileViewingScreen(
                             val description = Description()
                             description.text = "Steps Profile"
                             chart.description = description
-                            /*chart.zoom(
-                            1 / stepsTimes.size.toFloat(),
-                            1f,
-                            stepsTimes.last().toFloat(),
-                            steps.last().toFloat(),
-                            YAxis.AxisDependency.RIGHT
-                        )*/
                             chart.xAxis.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisLeft.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisRight.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
@@ -117,3 +97,25 @@ fun StepsProfileViewingScreen(
         )
     }
 }
+
+//steps: ArrayDeque<Long>,
+//stepsTimes: ArrayDeque<Long>,
+//stepSampleDao: StepSampleDao,
+//stepRecordingViewModel: StepRecordingViewModel,
+//val viewModel: MainActivity.StepListViewModel = viewModel()
+
+//if (steps.isNotEmpty()) {
+/*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
+    Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
+}
+val dataSet = LineDataSet(entries, "set").apply {
+}*/
+//val samples = stepSampleDao.getAll()
+
+/*chart.zoom(
+1 / stepsTimes.size.toFloat(),
+1f,
+stepsTimes.last().toFloat(),
+steps.last().toFloat(),
+YAxis.AxisDependency.RIGHT
+)*/

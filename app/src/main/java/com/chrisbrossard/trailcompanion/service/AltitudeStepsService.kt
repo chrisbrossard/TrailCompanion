@@ -20,8 +20,6 @@ import com.chrisbrossard.trailcompanion.MainActivity.Recording
 import com.chrisbrossard.trailcompanion.data.AltitudeSample
 import com.chrisbrossard.trailcompanion.data.AltitudeSampleDao
 import com.chrisbrossard.trailcompanion.data.AppDatabase
-//import com.chrisbrossard.trailcompanion.data.StepSample
-//import com.chrisbrossard.trailcompanion.data.StepSampleDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,24 +30,16 @@ class AltitudeStepsService : Service(), SensorEventListener {
     private lateinit var sensorManager: SensorManager
     private var stepSensor: Sensor? = null
     private var pressureSensor: Sensor? = null
-    //var periodicStartTime = 0L
-    //var stepsTime = 0L
     var startTime = 0L
     var periodStartTime = 0L
-    //val updateSteps = 0
-    //val updateAltitude = 1
     val notificationId = 1
     lateinit var manager: NotificationManager
     lateinit var notification: Notification
-    //private lateinit var stepSampleDao: StepSampleDao
-    //var startSteps = 0L
     private lateinit var altitudeSampleDao: AltitudeSampleDao
-    //var sessionIdViewModel = SessionIdViewModel(application)
 
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        //stepSampleDao = AppDatabase.getInstance(applicationContext).stepSampleDao()
         altitudeSampleDao = AppDatabase.getInstance(applicationContext).altitudeSampleDao()
 
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
@@ -86,42 +76,7 @@ class AltitudeStepsService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-        /*if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
-
-            val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-            val recording = sharedPreferences.getInt("step_recording",
-                Recording.OFF.ordinal)
-            if (recording == Recording.OFF.ordinal) {
-                return
-            }
-
-            val now = System.currentTimeMillis()
-            if (stepsTime == 0L) {
-                stepsTime = now
-            }
-            val normalizedTime = now - stepsTime
-            if (startSteps == 0L) {
-                startSteps = event.values[0].toLong()
-            }
-            val normalizedSteps = event.values[0].toLong() - startSteps
-
-            val sessionId = sharedPreferences.getLong("step_session_id", 0)
-
-            val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-            serviceScope.launch {
-                try {
-                    stepSampleDao.insert(
-                        StepSample(
-                            sessionId = sessionId,
-                            time = normalizedTime,
-                            steps = normalizedSteps
-                        )
-                    )
-                } catch (e: Exception) {
-                    Log.e("Location and Compass", "step sample insert failed", e)
-                }
-            }
-        } else*/ if (event?.sensor?.type == Sensor.TYPE_PRESSURE) {
+        if (event?.sensor?.type == Sensor.TYPE_PRESSURE) {
             val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
             val recording = sharedPreferences.getInt(
                 "altitude_recording",
@@ -210,3 +165,51 @@ fun createAltitudeSample(
 /*if (startAltitude == 0) {
     startAltitude = a.toInt()
 }*/
+
+//import com.chrisbrossard.trailcompanion.data.StepSample
+//import com.chrisbrossard.trailcompanion.data.StepSampleDao
+//var periodicStartTime = 0L
+//var stepsTime = 0L
+//val updateSteps = 0
+//val updateAltitude = 1
+//private lateinit var stepSampleDao: StepSampleDao
+//var startSteps = 0L
+//var sessionIdViewModel = SessionIdViewModel(application)
+//stepSampleDao = AppDatabase.getInstance(applicationContext).stepSampleDao()
+
+/*if (event?.sensor?.type == Sensor.TYPE_STEP_COUNTER) {
+
+    val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
+    val recording = sharedPreferences.getInt("step_recording",
+        Recording.OFF.ordinal)
+    if (recording == Recording.OFF.ordinal) {
+        return
+    }
+
+    val now = System.currentTimeMillis()
+    if (stepsTime == 0L) {
+        stepsTime = now
+    }
+    val normalizedTime = now - stepsTime
+    if (startSteps == 0L) {
+        startSteps = event.values[0].toLong()
+    }
+    val normalizedSteps = event.values[0].toLong() - startSteps
+
+    val sessionId = sharedPreferences.getLong("step_session_id", 0)
+
+    val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    serviceScope.launch {
+        try {
+            stepSampleDao.insert(
+                StepSample(
+                    sessionId = sessionId,
+                    time = normalizedTime,
+                    steps = normalizedSteps
+                )
+            )
+        } catch (e: Exception) {
+            Log.e("Location and Compass", "step sample insert failed", e)
+        }
+    }
+} else*/

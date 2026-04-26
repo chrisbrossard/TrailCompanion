@@ -23,22 +23,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
-
-//@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun DistanceProfileRecordingScreen(
-    //steps: ArrayDeque<Long>,
-    //stepsTimes: ArrayDeque<Long>,
-    //stepSampleDao: StepSampleDao,
     locationListViewModel: LocationListViewModel,
     locationRecordingViewModel: LocationRecordingViewModel,
     navController: NavHostController,
     locationSessionIdViewModel: LocationSessionIdViewModel,
-    //locationSampleViewModel: LocationSampleViewModel
 ) {
-    //val viewModel: MainActivity.StepListViewModel = viewModel()
     val rowList by locationListViewModel.rowList.collectAsState(initial = emptyList())
-    //var clickedText by remember { mutableStateOf("Stop Recording") }
     val sessionId = locationSessionIdViewModel.getSessionId()
 
     BackHandler(enabled = true) {
@@ -47,19 +39,6 @@ fun DistanceProfileRecordingScreen(
         navController.popBackStack("overview", false)
     }
 
-    /*Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    stepRecordingViewModel.updateRecording(false)
-                    clickedText = if (clickedText == "Stop Recording") "Recording Stopped"
-                    else "Stop Recording"
-                }
-            ) {
-                Text("+")
-            }
-        }
-    ) { innerPadding ->*/
     Column {
         Box(
             Modifier
@@ -79,13 +58,6 @@ fun DistanceProfileRecordingScreen(
                         LineChart(context)
                     },
                     update = { chart ->
-                        //if (steps.isNotEmpty()) {
-                        /*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
-                            Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
-                        }
-                        val dataSet = LineDataSet(entries, "set").apply {
-                        }*/
-                        //val samples = stepSampleDao.getAll()
                         val entries = ArrayList<Entry>()
                         var flag = false
                         for (sample in rowList) {
@@ -97,8 +69,7 @@ fun DistanceProfileRecordingScreen(
                         if (flag) {
                             var distance = 0f
                             var location = Location("")
-                            //var index = 0
-                            for (sample in rowList) { //samples) {
+                            for (sample in rowList) {
                                 if (sessionId == sample.sessionId) {
                                     val newLocation = Location("")
                                     newLocation.latitude = sample.latitude
@@ -116,43 +87,21 @@ fun DistanceProfileRecordingScreen(
                                         distance,
                                         sample.locationId as Any
                                     )
-                                    //entry.data = sample.locationId
                                     entries.add(entry)
                                 }
-                                /*val serviceScope =
-                                    CoroutineScope(SupervisorJob() + Dispatchers.IO)
-                                serviceScope.launch {
-                                    locationSampleViewModel.setX(sample.locationId, x)
-                                }*/
                             }
                             val dataSet = LineDataSet(entries, "set").apply {
                             }
                             dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
                             dataSet.label = "distance (m)"
-                            //dataSet.setDrawFilled(true)
-                            //dataSet.fillColor = 0x964B00
-                            //dataSet.fillAlpha = 128
-                            //dataSet.setDrawCircles(false)
                             dataSet.setDrawValues(false)
                             dataSet.lineWidth = 4.0f
 
-                            /*val highlight = Highlight(
-                                0f,
-                                0f,
-                                0)
-                            chart.highlightValue(highlight)*/
                             chart.data = LineData(dataSet)
                             chart.setScaleEnabled(true)
                             val description = Description()
                             description.text = "Distance Profile"
                             chart.description = description
-                            /*chart.zoom(
-                            1 / stepsTimes.size.toFloat(),
-                            1f,
-                            stepsTimes.last().toFloat(),
-                            steps.last().toFloat(),
-                            YAxis.AxisDependency.RIGHT
-                        )*/
                             chart.xAxis.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisLeft.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisRight.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
@@ -161,7 +110,6 @@ fun DistanceProfileRecordingScreen(
                                 Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.invalidate()
                         }
-                        //}
                     }
                 )
             }
@@ -173,4 +121,56 @@ fun DistanceProfileRecordingScreen(
         )
     }
 }
-//}
+
+//steps: ArrayDeque<Long>,
+//stepsTimes: ArrayDeque<Long>,
+//stepSampleDao: StepSampleDao,
+//locationSampleViewModel: LocationSampleViewModel
+
+//val viewModel: MainActivity.StepListViewModel = viewModel()
+//var clickedText by remember { mutableStateOf("Stop Recording") }
+
+/*Scaffold(
+    floatingActionButton = {
+        FloatingActionButton(
+            onClick = {
+                stepRecordingViewModel.updateRecording(false)
+                clickedText = if (clickedText == "Stop Recording") "Recording Stopped"
+                else "Stop Recording"
+            }
+        ) {
+            Text("+")
+        }
+    }
+) { innerPadding ->*/
+
+//if (steps.isNotEmpty()) {
+/*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
+    Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
+}
+val dataSet = LineDataSet(entries, "set").apply {
+}*/
+//val samples = stepSampleDao.getAll()
+
+/*val serviceScope =
+    CoroutineScope(SupervisorJob() + Dispatchers.IO)
+serviceScope.launch {
+    locationSampleViewModel.setX(sample.locationId, x)
+}*/
+
+//dataSet.setDrawFilled(true)
+//dataSet.fillColor = 0x964B00
+//dataSet.fillAlpha = 128
+//dataSet.setDrawCircles(false)
+/*val highlight = Highlight(
+    0f,
+    0f,
+    0)
+chart.highlightValue(highlight)*/
+/*chart.zoom(
+1 / stepsTimes.size.toFloat(),
+1f,
+stepsTimes.last().toFloat(),
+steps.last().toFloat(),
+YAxis.AxisDependency.RIGHT
+)*/

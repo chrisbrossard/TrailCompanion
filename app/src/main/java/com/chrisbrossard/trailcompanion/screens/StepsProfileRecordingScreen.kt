@@ -26,20 +26,14 @@ import com.github.mikephil.charting.data.LineDataSet
 const val MILLISECONDS_PER_SECOND = 1000
 const val SECONDS_PER_MINUTE = 60
 
-//@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun StepsProfileRecordingScreen(
-    //steps: ArrayDeque<Long>,
-    //stepsTimes: ArrayDeque<Long>,
-    //stepSampleDao: StepSampleDao,
     stepListViewModel: StepListViewModel,
     stepRecordingViewModel: StepRecordingViewModel,
     navController: NavHostController,
     stepSessionIdViewModel: StepSessionIdViewModel
 ) {
-    //val viewModel: MainActivity.StepListViewModel = viewModel()
     val rowList by stepListViewModel.rowList.collectAsState(initial = emptyList())
-    //var clickedText by remember { mutableStateOf("Stop Recording") }
     val sessionId = stepSessionIdViewModel.getSessionId()
 
     BackHandler(enabled = true) {
@@ -47,19 +41,6 @@ fun StepsProfileRecordingScreen(
         navController.popBackStack()
     }
 
-    /*Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    stepRecordingViewModel.updateRecording(false)
-                    clickedText = if (clickedText == "Stop Recording") "Recording Stopped"
-                    else "Stop Recording"
-                }
-            ) {
-                Text("+")
-            }
-        }
-    ) { innerPadding ->*/
     Column {
         Box(
             Modifier
@@ -79,13 +60,6 @@ fun StepsProfileRecordingScreen(
                         LineChart(context)
                     },
                     update = { chart ->
-                        //if (steps.isNotEmpty()) {
-                        /*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
-                            Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
-                        }
-                        val dataSet = LineDataSet(entries, "set").apply {
-                        }*/
-                        //val samples = stepSampleDao.getAll()
                         val entries = ArrayList<Entry>()
                         var flag = false
                         for (sample in rowList) {
@@ -95,7 +69,7 @@ fun StepsProfileRecordingScreen(
                             }
                         }
                         if (flag) {
-                            for (sample in rowList) { //samples) {
+                            for (sample in rowList) {
                                 val entry = Entry(
                                     sample.time.toFloat() /
                                             (MILLISECONDS_PER_SECOND * SECONDS_PER_MINUTE),
@@ -119,13 +93,6 @@ fun StepsProfileRecordingScreen(
                             val description = Description()
                             description.text = "Steps Profile"
                             chart.description = description
-                            /*chart.zoom(
-                            1 / stepsTimes.size.toFloat(),
-                            1f,
-                            stepsTimes.last().toFloat(),
-                            steps.last().toFloat(),
-                            YAxis.AxisDependency.RIGHT
-                        )*/
                             chart.xAxis.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisLeft.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisRight.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
@@ -134,7 +101,6 @@ fun StepsProfileRecordingScreen(
                                 Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.invalidate()
                         }
-                        //}
                     }
                 )
             }
@@ -147,3 +113,39 @@ fun StepsProfileRecordingScreen(
     }
 }
 //}
+
+//steps: ArrayDeque<Long>,
+//stepsTimes: ArrayDeque<Long>,
+//stepSampleDao: StepSampleDao,
+//val viewModel: MainActivity.StepListViewModel = viewModel()
+//var clickedText by remember { mutableStateOf("Stop Recording") }
+
+/*Scaffold(
+    floatingActionButton = {
+        FloatingActionButton(
+            onClick = {
+                stepRecordingViewModel.updateRecording(false)
+                clickedText = if (clickedText == "Stop Recording") "Recording Stopped"
+                else "Stop Recording"
+            }
+        ) {
+            Text("+")
+        }
+    }
+) { innerPadding ->*/
+
+//if (steps.isNotEmpty()) {
+/*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
+    Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
+}
+val dataSet = LineDataSet(entries, "set").apply {
+}*/
+//val samples = stepSampleDao.getAll()
+
+/*chart.zoom(
+1 / stepsTimes.size.toFloat(),
+1f,
+stepsTimes.last().toFloat(),
+steps.last().toFloat(),
+YAxis.AxisDependency.RIGHT
+)*/

@@ -22,7 +22,6 @@ import com.chrisbrossard.trailcompanion.viewmodel.VerticalSpeedViewModel
 
 @Composable
 fun VerticalSpeedScreen(
-    //altitudeSlope: Double,
     verticalSpeedViewModel: VerticalSpeedViewModel
 ) {
     val verticalSpeed by verticalSpeedViewModel.verticalSpeed.collectAsState()

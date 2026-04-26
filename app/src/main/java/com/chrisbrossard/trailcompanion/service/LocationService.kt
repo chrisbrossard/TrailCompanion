@@ -9,11 +9,8 @@ import android.content.pm.ServiceInfo
 import android.location.Location
 import android.os.Build
 import android.os.IBinder
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.DefaultTab.AlbumsTab.value
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import com.chrisbrossard.trailcompanion.MainActivity.Recording
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -25,36 +22,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
-import androidx.core.content.edit
 
 class LocationService : Service() {
     val client: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
     }
-    /*val locationCallback = object : LocationCallback() {
-        @RequiresApi(Build.VERSION_CODES.O)
-        override fun onLocationResult(locationResult: LocationResult) {
-            super.onLocationResult(locationResult)
-            if (locationResult.locations.isNotEmpty()) {
-                val location = locationResult.locations.last()
-                val intent = Intent("com.chrisbrossard.trailcompanion.location")
-                intent.putExtra("latitude", location.latitude)
-                intent.putExtra("longitude", location.longitude)
-                intent.putExtra("accuracy", location.accuracy)
-                intent.putExtra("speed", location.speed)
-                intent.putExtra("bearing", location.bearing)
-                intent.putExtra("bearing_accuracy", location.bearingAccuracyDegrees)
-                intent.putExtra("altitude", location.altitude)
-                sendBroadcast(intent)
-                /*onLocationResult(
-                    location
-                )*/
-            }
-        }
-    }
-    inner class LocalBinder : Binder() {
-        fun getService(): LocationService = this@LocationService
-    }*/
+
     var serviceJob: Job? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -84,46 +57,8 @@ class LocationService : Service() {
             .build()
         startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
 
-        /*val locationRequest = LocationRequest
-            .Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
-            .setMinUpdateIntervalMillis(5000)
-            .build()*/
-
-        /*client.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )*/
-
         serviceJob = CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
-                val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-                val locationRecording = sharedPreferences.getInt(
-                    "location_recording",
-                    -1
-                )
-                /*val gpsAltitudeRecording = sharedPreferences.getInt(
-                    "gps_altitude_recording",
-                    -1
-                )*/
-                //if (locationRecording != Recording.OFF.ordinal ||
-                //gpsAltitudeRecording != Recording.OFF.ordinal) {
-                /*if (locationRecording == Recording.STARTING.ordinal) {
-                    client.lastLocation
-                        .addOnSuccessListener { location: Location? ->
-                            if (location != null) {
-                                val intent = Intent("com.chrisbrossard.trailcompanion.location")
-                                intent.putExtra("latitude", location.latitude)
-                                intent.putExtra("longitude", location.longitude)
-                                intent.putExtra("altitude", location.altitude)
-                                sendBroadcast(intent)
-                            }
-                        }
-                    val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
-                    sharedPreferences.edit {
-                        putInt("location_recording", Recording.ON.ordinal)
-                    }
-                }*/
                 val location: Location = suspendCancellableCoroutine { continuation ->
                     client.getCurrentLocation(
                         Priority.PRIORITY_HIGH_ACCURACY,
@@ -136,7 +71,6 @@ class LocationService : Service() {
                             (cause)
                         }
                     }
-                    //}
                 }
                 val intent = Intent("com.chrisbrossard.trailcompanion.location")
                 intent.putExtra("latitude", location.latitude)
@@ -145,7 +79,6 @@ class LocationService : Service() {
                 sendBroadcast(intent)
 
                 delay(60 * 1000)
-                //}
             }
         }
 
@@ -156,7 +89,6 @@ class LocationService : Service() {
         super.onDestroy()
         serviceJob?.cancel()
         stopSelf()
-        //client.removeLocationUpdates(locationCallback)
     }
 }
 
@@ -177,5 +109,65 @@ suspend fun awaitLocation(): Location = suspendCancellableCoroutine { continuati
             intent.putExtra("altitude", location.altitude)
             sendBroadcast(intent)
         }
+    }
+}*/
+
+/*val locationCallback = object : LocationCallback() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onLocationResult(locationResult: LocationResult) {
+        super.onLocationResult(locationResult)
+        if (locationResult.locations.isNotEmpty()) {
+            val location = locationResult.locations.last()
+            val intent = Intent("com.chrisbrossard.trailcompanion.location")
+            intent.putExtra("latitude", location.latitude)
+            intent.putExtra("longitude", location.longitude)
+            intent.putExtra("accuracy", location.accuracy)
+            intent.putExtra("speed", location.speed)
+            intent.putExtra("bearing", location.bearing)
+            intent.putExtra("bearing_accuracy", location.bearingAccuracyDegrees)
+            intent.putExtra("altitude", location.altitude)
+            sendBroadcast(intent)
+            /*onLocationResult(
+                location
+            )*/
+        }
+    }
+}
+inner class LocalBinder : Binder() {
+    fun getService(): LocationService = this@LocationService
+}*/
+
+
+/*val locationRequest = LocationRequest
+    .Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000L)
+    .setMinUpdateIntervalMillis(5000)
+    .build()*/
+
+/*client.requestLocationUpdates(
+    locationRequest,
+    locationCallback,
+    Looper.getMainLooper()
+)*/
+
+/*val gpsAltitudeRecording = sharedPreferences.getInt(
+    "gps_altitude_recording",
+    -1
+)*/
+//if (locationRecording != Recording.OFF.ordinal ||
+//gpsAltitudeRecording != Recording.OFF.ordinal) {
+/*if (locationRecording == Recording.STARTING.ordinal) {
+    client.lastLocation
+        .addOnSuccessListener { location: Location? ->
+            if (location != null) {
+                val intent = Intent("com.chrisbrossard.trailcompanion.location")
+                intent.putExtra("latitude", location.latitude)
+                intent.putExtra("longitude", location.longitude)
+                intent.putExtra("altitude", location.altitude)
+                sendBroadcast(intent)
+            }
+        }
+    val sharedPreferences = getSharedPreferences("my_app", MODE_PRIVATE)
+    sharedPreferences.edit {
+        putInt("location_recording", Recording.ON.ordinal)
     }
 }*/

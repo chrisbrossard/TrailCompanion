@@ -21,42 +21,14 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
 
-//@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun DistanceProfileViewingScreen(
-    //steps: ArrayDeque<Long>,
-    //stepsTimes: ArrayDeque<Long>,
-    //stepSampleDao: StepSampleDao,
     locationListViewModel: LocationListViewModel,
-    //locationRecordingViewModel: LocationRecordingViewModel,
-    //navController: NavHostController,
     locationSessionIdViewModel: LocationSessionIdViewModel,
-    //locationSampleViewModel: LocationSampleViewModel,
-    //navigationViewModel: NavigationViewModel
 ) {
-    //val viewModel: MainActivity.StepListViewModel = viewModel()
     val rowList by locationListViewModel.rowList.collectAsState(initial = emptyList())
-    //var clickedText by remember { mutableStateOf("Stop Recording") }
     val sessionId = locationSessionIdViewModel.getSessionId()
 
-    /*BackHandler(enabled = true) {
-        locationRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
-        navController.popBackStack()
-    }*/
-
-    /*Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    stepRecordingViewModel.updateRecording(false)
-                    clickedText = if (clickedText == "Stop Recording") "Recording Stopped"
-                    else "Stop Recording"
-                }
-            ) {
-                Text("+")
-            }
-        }
-    ) { innerPadding ->*/
     Column {
         Box(
             Modifier
@@ -76,13 +48,6 @@ fun DistanceProfileViewingScreen(
                         LineChart(context)
                     },
                     update = { chart ->
-                        //if (steps.isNotEmpty()) {
-                        /*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
-                            Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
-                        }
-                        val dataSet = LineDataSet(entries, "set").apply {
-                        }*/
-                        //val samples = stepSampleDao.getAll()
                         val entries = ArrayList<Entry>()
                         var flag = false
                         for (sample in rowList) {
@@ -94,7 +59,7 @@ fun DistanceProfileViewingScreen(
                         if (flag) {
                             var distance = 0f
                             var location = Location("")
-                            for (sample in rowList) { //samples) {
+                            for (sample in rowList) {
                                 if (sessionId == sample.sessionId) {
                                     val newLocation = Location("")
                                     newLocation.latitude = sample.latitude
@@ -115,50 +80,14 @@ fun DistanceProfileViewingScreen(
                             }
                             dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
                             dataSet.label = "distance m"
-                            //dataSet.setDrawFilled(true)
-                            //dataSet.fillColor = 0x964B00
-                            //dataSet.fillAlpha = 128
-                            //dataSet.setDrawCircles(false)
                             dataSet.setDrawValues(false)
-                            //dataSet.setCircleColor(Color.RED)
                             dataSet.lineWidth = 4.0f
                             chart.data = LineData(dataSet)
                             chart.setScaleEnabled(true)
                             val description = Description()
                             description.text = "Distance Profile"
                             chart.description = description
-                            /*chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
-                                override fun onValueSelected(e: Entry?, h: Highlight?) {
-                                    //var sampleId = 0
-                                    if (e != null) {
-                                        val index = dataSet.getEntryIndex(e)
-                                        //sampleId = e.data as Int
-                                        val serviceScope =
-                                            CoroutineScope(SupervisorJob() + Dispatchers.IO)
-                                        serviceScope.launch {
-                                            val sample =
-                                                //locationSampleViewModel.getSample(sampleId)
-                                                locationSampleViewModel.getSample(index)
-                                            navigationViewModel.setWaypoint(
-                                                sample.latitude,
-                                                sample.longitude
-                                            )
-                                            navigationViewModel.navigating = true
-                                            //h?.dataIndex
-                                        }
-                                    }
-                                }
 
-                                override fun onNothingSelected() {
-                                }
-                            })*/
-                            /*chart.zoom(
-                            1 / stepsTimes.size.toFloat(),
-                            1f,
-                            stepsTimes.last().toFloat(),
-                            steps.last().toFloat(),
-                            YAxis.AxisDependency.RIGHT
-                        )*/
                             chart.xAxis.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisLeft.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.axisRight.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
@@ -167,7 +96,6 @@ fun DistanceProfileViewingScreen(
                                 Typeface.defaultFromStyle(Typeface.BOLD)
                             chart.invalidate()
                         }
-                        //}
                     }
                 )
             }
@@ -179,4 +107,80 @@ fun DistanceProfileViewingScreen(
         )
     }
 }
-//}
+
+//steps: ArrayDeque<Long>,
+//stepsTimes: ArrayDeque<Long>,
+//stepSampleDao: StepSampleDao,
+//locationRecordingViewModel: LocationRecordingViewModel,
+//navController: NavHostController,
+//locationSampleViewModel: LocationSampleViewModel,
+//navigationViewModel: NavigationViewModel
+
+//val viewModel: MainActivity.StepListViewModel = viewModel()
+//var clickedText by remember { mutableStateOf("Stop Recording") }
+
+/*BackHandler(enabled = true) {
+    locationRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
+    navController.popBackStack()
+}*/
+
+/*Scaffold(
+    floatingActionButton = {
+        FloatingActionButton(
+            onClick = {
+                stepRecordingViewModel.updateRecording(false)
+                clickedText = if (clickedText == "Stop Recording") "Recording Stopped"
+                else "Stop Recording"
+            }
+        ) {
+            Text("+")
+        }
+    }
+) { innerPadding ->*/
+
+//if (steps.isNotEmpty()) {
+/*val entries: List<Entry> = stepsTimes.zip(steps).map { (x, y) ->
+    Entry(x.toFloat() / (1000f * 60f), y.toFloat()) // to minutes
+}
+val dataSet = LineDataSet(entries, "set").apply {
+}*/
+//val samples = stepSampleDao.getAll()
+
+//dataSet.setDrawFilled(true)
+//dataSet.fillColor = 0x964B00
+//dataSet.fillAlpha = 128
+//dataSet.setDrawCircles(false)
+//dataSet.setCircleColor(Color.RED)
+
+/*chart.setOnChartValueSelectedListener(object: OnChartValueSelectedListener {
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+        //var sampleId = 0
+        if (e != null) {
+            val index = dataSet.getEntryIndex(e)
+            //sampleId = e.data as Int
+            val serviceScope =
+                CoroutineScope(SupervisorJob() + Dispatchers.IO)
+            serviceScope.launch {
+                val sample =
+                    //locationSampleViewModel.getSample(sampleId)
+                    locationSampleViewModel.getSample(index)
+                navigationViewModel.setWaypoint(
+                    sample.latitude,
+                    sample.longitude
+                )
+                navigationViewModel.navigating = true
+                //h?.dataIndex
+            }
+        }
+    }
+
+    override fun onNothingSelected() {
+    }
+})*/
+/*chart.zoom(
+1 / stepsTimes.size.toFloat(),
+1f,
+stepsTimes.last().toFloat(),
+steps.last().toFloat(),
+YAxis.AxisDependency.RIGHT
+)*/

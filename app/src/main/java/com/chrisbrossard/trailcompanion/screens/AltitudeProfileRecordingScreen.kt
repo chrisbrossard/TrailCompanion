@@ -16,58 +16,27 @@ import com.chrisbrossard.trailcompanion.MainActivity
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
-//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
-//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
-//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
-//import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
-//@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun AltitudeProfileRecordingScreen(
-    //altitudes: ArrayDeque<Int>,
     altitudeListViewModel: AltitudeListViewModel,
     altitudeRecordingViewModel: AltitudeRecordingViewModel,
     navController: NavHostController,
     altitudeSessionIdViewModel: AltitudeSessionIdViewModel,
-    //gPSAltitudeListViewModel: GPSAltitudeListViewModel,
-    //gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
-    //gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,
-    //location: Location,
-    //seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
-    //val altitudeListViewModel: AltitudeListViewModel = viewModel()
     val rowList by altitudeListViewModel.rowList.collectAsState(initial = emptyList())
-    //val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
-    //var clickedText by remember { mutableStateOf("Stop Recording") }
-    //val altitudeViewModel: AltitudeViewModel = viewModel()
     val sessionId = altitudeSessionIdViewModel.getSessionId()
-    //val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
-    //val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
 
-        BackHandler {
+    BackHandler {
         altitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
-        //gPSAltitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
-
         navController.popBackStack("overview", false)
     }
 
-    /*Scaffold(
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    altitudeRecordingViewModel.updateRecording(false)
-                    clickedText =  if (clickedText == "Stop Recording") "Stop Recording" else
-                        "Recording Stopped"
-                }
-            ) {
-            }
-        }
-    ) { innerPadding ->*/
     Column {
         Box(
             Modifier
@@ -86,13 +55,7 @@ fun AltitudeProfileRecordingScreen(
                     LineChart(context)
                 },
                 update = { chart ->
-                    //if (altitudes.isNotEmpty()) {
                     val entries = ArrayList<Entry>()
-                    /*var index = 0f
-                        for (value in altitudes) {
-                            entries.add(Entry(index, value.toFloat()))
-                            index++
-                        }*/
                     var flag1 = false
                     for (sample in rowList) {
                         if (sessionId == sample.sessionId) {
@@ -100,26 +63,9 @@ fun AltitudeProfileRecordingScreen(
                             break
                         }
                     }
-                    /*var flag2 = false
-                    for (sample in gPSRowList) {
-                        if (sessionId == sample.sessionId) {
-                            flag2 = true
-                            break
-                        }
-                    }*/
-                    if (flag1) { // || flag2) {
+                    if (flag1) {
 
-                        for (sample in rowList) { //samples) {
-                            /*var seaLevelPressure = PRESSURE_STANDARD_ATMOSPHERE
-                            if (location.altitude != 0.0) { //gPSAltitude != 0.0) {
-                                seaLevelPressure = (sample.pressure /
-                                        (1 - location.altitude / 44330.0).pow(5.255)).toFloat()
-                            }*/
-
-                            /*val a = SensorManager.getAltitude(
-                                seaLevelPressure, //SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
-                                sample.pressure
-                            )*/
+                        for (sample in rowList) {
                             val entry = Entry(
                                 sample.time.toFloat() / (1000 * 60),
                                 sample.altitude
@@ -128,43 +74,12 @@ fun AltitudeProfileRecordingScreen(
                                 entries.add(entry)
                             }
                         }
-                        //entries.sortedBy { it.x }
                         val dataSet1 = LineDataSet(entries, "altitudes").apply {
                         }
-                        //chart.data = LineData(dataSet)
                         dataSet1.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
                         dataSet1.label = "Altitudes (m)"
-                        //dataSet.setDrawFilled(true)
-                        //dataSet.fillColor = 0x00FF00
-                        //dataSet.fillAlpha = 128
                         dataSet1.lineWidth = 4.0f
-                        //dataSet1.setDrawCircles(false)
                         dataSet1.setDrawValues(false)
-
-                        /*entries = ArrayList()
-                        for (sample in gPSRowList) { //samples) {
-                            val entry = Entry(
-                                sample.time.toFloat() / (1000 * 60),
-                                sample.altitude
-                            )
-                            if (sample.sessionId == gPSSessionId) {
-                                entries.add(entry)
-                            }
-                        }
-                        //entries.sortedBy { it.x }
-                        val dataSet2 = LineDataSet(entries, "gps_altitudes").apply {
-                        }
-                        //chart.data = LineData(dataSet)
-                        dataSet2.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
-                        dataSet2.label = "GPS Altitudes (m)"
-                        //dataSet.setDrawFilled(true)
-                        //dataSet.fillColor = 0x00FF00
-                        //dataSet.fillAlpha = 128
-                        dataSet2.lineWidth = 4.0f
-                        dataSet2.setColor(Color.MAGENTA)
-                        dataSet2.setCircleColor(Color.MAGENTA)
-                        //dataSet2.setDrawCircles(false)
-                        dataSet2.setDrawValues(false)*/
 
                         chart.data = LineData(dataSet1)//, dataSet2)
                         chart.setScaleEnabled(true)
@@ -173,13 +88,6 @@ fun AltitudeProfileRecordingScreen(
                         val description = Description()
                         description.text = "Altitude Profile"
                         chart.description = description
-                        /*chart.zoom(
-                            1 / altitudes.size.toFloat(),
-                            1f,
-                            index,
-                            altitudes.last().toFloat(),
-                            YAxis.AxisDependency.RIGHT
-                        )*/
                         chart.xAxis.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                         chart.axisLeft.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
                         chart.axisRight.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
@@ -197,3 +105,102 @@ fun AltitudeProfileRecordingScreen(
         )
     }
 }
+
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeListViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeRecordingViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.GPSAltitudeSessionIdViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
+
+//altitudes: ArrayDeque<Int>,
+//gPSAltitudeListViewModel: GPSAltitudeListViewModel,
+//gPSAltitudeSessionIdViewModel: GPSAltitudeSessionIdViewModel,
+//gPSAltitudeRecordingViewModel: GPSAltitudeRecordingViewModel,
+//location: Location,
+//seaLevelPressureViewModel: SeaLevelPressureViewModel
+
+//val altitudeListViewModel: AltitudeListViewModel = viewModel()
+//val gPSRowList by gPSAltitudeListViewModel.rowList.collectAsState(initial = emptyList())
+//var clickedText by remember { mutableStateOf("Stop Recording") }
+//val altitudeViewModel: AltitudeViewModel = viewModel()
+//val gPSSessionId = gPSAltitudeSessionIdViewModel.getSessionId()
+//val seaLevelPressure by seaLevelPressureViewModel.pressure.collectAsState()
+
+//gPSAltitudeRecordingViewModel.updateRecording(MainActivity.Recording.OFF.ordinal)
+
+/*Scaffold(
+    floatingActionButton = {
+        ExtendedFloatingActionButton(
+            onClick = {
+                altitudeRecordingViewModel.updateRecording(false)
+                clickedText =  if (clickedText == "Stop Recording") "Stop Recording" else
+                    "Recording Stopped"
+            }
+        ) {
+        }
+    }
+) { innerPadding ->*/
+
+//if (altitudes.isNotEmpty()) {
+/*var index = 0f
+    for (value in altitudes) {
+        entries.add(Entry(index, value.toFloat()))
+        index++
+    }*/
+/*var flag2 = false
+for (sample in gPSRowList) {
+    if (sessionId == sample.sessionId) {
+        flag2 = true
+        break
+    }
+}*/
+
+/*var seaLevelPressure = PRESSURE_STANDARD_ATMOSPHERE
+if (location.altitude != 0.0) { //gPSAltitude != 0.0) {
+    seaLevelPressure = (sample.pressure /
+            (1 - location.altitude / 44330.0).pow(5.255)).toFloat()
+}*/
+
+/*val a = SensorManager.getAltitude(
+    seaLevelPressure, //SensorManager.PRESSURE_STANDARD_ATMOSPHERE,
+    sample.pressure
+)*/
+
+//entries.sortedBy { it.x }
+//chart.data = LineData(dataSet)
+//dataSet.setDrawFilled(true)
+//dataSet.fillColor = 0x00FF00
+//dataSet.fillAlpha = 128
+//dataSet1.setDrawCircles(false)
+
+/*entries = ArrayList()
+for (sample in gPSRowList) { //samples) {
+    val entry = Entry(
+        sample.time.toFloat() / (1000 * 60),
+        sample.altitude
+    )
+    if (sample.sessionId == gPSSessionId) {
+        entries.add(entry)
+    }
+}
+//entries.sortedBy { it.x }
+val dataSet2 = LineDataSet(entries, "gps_altitudes").apply {
+}
+//chart.data = LineData(dataSet)
+dataSet2.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
+dataSet2.label = "GPS Altitudes (m)"
+//dataSet.setDrawFilled(true)
+//dataSet.fillColor = 0x00FF00
+//dataSet.fillAlpha = 128
+dataSet2.lineWidth = 4.0f
+dataSet2.setColor(Color.MAGENTA)
+dataSet2.setCircleColor(Color.MAGENTA)
+//dataSet2.setDrawCircles(false)
+dataSet2.setDrawValues(false)*/
+
+/*chart.zoom(
+    1 / altitudes.size.toFloat(),
+    1f,
+    index,
+    altitudes.last().toFloat(),
+    YAxis.AxisDependency.RIGHT
+)*/
