@@ -1,6 +1,5 @@
 package com.chrisbrossard.trailcompanion.data
 
-import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -9,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AltitudeSessionDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(altitudeSession: AltitudeSession): Long
 
     @Query("SELECT * FROM altitude_sessions WHERE sessionId = (:sessionId)")

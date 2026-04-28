@@ -11,10 +11,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Build
 import android.os.IBinder
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.chrisbrossard.trailcompanion.MainActivity.Recording
 import com.chrisbrossard.trailcompanion.data.AltitudeSample
@@ -37,7 +35,6 @@ class AltitudeStepsService : Service(), SensorEventListener {
     lateinit var notification: Notification
     private lateinit var altitudeSampleDao: AltitudeSampleDao
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         altitudeSampleDao = AppDatabase.getInstance(applicationContext).altitudeSampleDao()

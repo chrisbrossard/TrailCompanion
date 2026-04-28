@@ -6,7 +6,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.chrisbrossard.trailcompanion.data.GPSAltitudeSession
 
 @Entity(
     tableName = "gps_altitudes",
@@ -15,7 +14,7 @@ import com.chrisbrossard.trailcompanion.data.GPSAltitudeSession
             entity = GPSAltitudeSession::class,
             parentColumns = ["sessionId"],
             childColumns = ["sessionId"],
-            onDelete = ForeignKey.Companion.CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index("sessionId")]

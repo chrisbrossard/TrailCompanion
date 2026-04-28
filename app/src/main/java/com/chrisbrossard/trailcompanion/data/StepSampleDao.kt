@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StepSampleDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(steps: StepSample)
 
     @Query("SELECT * FROM steps WHERE stepId = (:stepSampleId)")

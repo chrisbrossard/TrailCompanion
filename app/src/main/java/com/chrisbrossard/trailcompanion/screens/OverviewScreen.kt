@@ -1,14 +1,11 @@
 package com.chrisbrossard.trailcompanion.screens
 
 import android.content.Context
-//import android.content.Intent
 import android.content.SharedPreferences
 import android.hardware.SensorManager
 import android.hardware.SensorManager.PRESSURE_STANDARD_ATMOSPHERE
 import android.location.Location
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -54,8 +51,6 @@ import com.chrisbrossard.trailcompanion.data.LocationSampleDao
 import com.chrisbrossard.trailcompanion.data.LocationSession
 import com.chrisbrossard.trailcompanion.data.LocationSessionDao
 import com.chrisbrossard.trailcompanion.requestCurrentLocation
-import com.chrisbrossard.trailcompanion.viewmodel.AltitudeDeleteViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionIdViewModel
@@ -63,13 +58,10 @@ import com.chrisbrossard.trailcompanion.viewmodel.AltitudeSessionListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.ChartDistanceViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.DistanceViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.HeadingViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationRecordingViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionCountViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionIdViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.LocationSessionListViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
-import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.PressureViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.SeaLevelPressureViewModel
 import com.chrisbrossard.trailcompanion.viewmodel.VerticalSpeedViewModel
@@ -88,36 +80,28 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class, ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.O)
-@Suppress("UNUSED_PARAMETER")
 @Composable
 fun OverviewScreen(
     client: FusedLocationProviderClient,
     navController: NavHostController,
-    magnetometerAccuracy: Int,
     altitudeSampleDao: AltitudeSampleDao,
     altitudeSessionDao: AltitudeSessionDao,
-    altitudeListViewModel: AltitudeListViewModel,
     altitudeSessionCountViewModel: AltitudeSessionCountViewModel,
     altitudeSessionListViewModel: AltitudeSessionListViewModel,
     altitudeSessionIdViewModel: AltitudeSessionIdViewModel,
     altitudeRecordingViewModel: AltitudeRecordingViewModel,
-    altitudeDeleteViewModel: AltitudeDeleteViewModel,
     onNavigateToAltitudeRecording: () -> Unit,
     headingViewModel: HeadingViewModel,
     verticalSpeedViewModel: VerticalSpeedViewModel,
     pressureViewModel: PressureViewModel,
     distanceViewModel: DistanceViewModel,
-    locationListViewModel: LocationListViewModel,
     locationRecordingViewModel: LocationRecordingViewModel,
     locationSessionIdViewModel: LocationSessionIdViewModel,
     locationSessionDao: LocationSessionDao,
     locationSessionListViewModel: LocationSessionListViewModel,
     locationSampleDao: LocationSampleDao,
     locationSessionCountViewModel: LocationSessionCountViewModel,
-    navigationViewModel: NavigationViewModel,
     chartDistanceViewModel: ChartDistanceViewModel,
-    locationViewModel: LocationViewModel,
     seaLevelPressureViewModel: SeaLevelPressureViewModel
 ) {
     var sunMoonOctant by remember { mutableStateOf("-") }
@@ -281,7 +265,7 @@ fun OverviewScreen(
             }
         }
         // main screen
-    ) { innerPadding ->
+    ) { _ ->
         Column {
             val grey = Color(250, 250, 250)
             // first row
@@ -1165,3 +1149,19 @@ LazyColumn {
         Text(s)
     }
 }*/
+
+//magnetometerAccuracy: Int,
+//altitudeListViewModel: AltitudeListViewModel,
+//altitudeDeleteViewModel: AltitudeDeleteViewModel,
+//locationListViewModel: LocationListViewModel,
+//navigationViewModel: NavigationViewModel,
+//locationViewModel: LocationViewModel,
+
+//import android.content.Intent
+//import android.os.Build
+//import androidx.annotation.RequiresApi
+//import com.chrisbrossard.trailcompanion.viewmodel.AltitudeDeleteViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.AltitudeListViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.LocationListViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.LocationViewModel
+//import com.chrisbrossard.trailcompanion.viewmodel.NavigationViewModel

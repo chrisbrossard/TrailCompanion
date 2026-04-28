@@ -7,9 +7,7 @@ import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.location.Location
-import android.os.Build
 import android.os.IBinder
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -30,18 +28,10 @@ class LocationService : Service() {
 
     var serviceJob: Job? = null
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreate() {
-        super.onCreate()
-
-
-    }
-
     override fun onBind(intent: Intent?): IBinder? {
         TODO("Not yet implemented")
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("MissingPermission")
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 

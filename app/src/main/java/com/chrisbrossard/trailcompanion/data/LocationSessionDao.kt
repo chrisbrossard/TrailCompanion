@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationSessionDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(locationSession: LocationSession): Long
 
     @Query("SELECT * FROM location_sessions WHERE sessionId = (:sessionId)")

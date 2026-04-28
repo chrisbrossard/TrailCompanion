@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LocationSampleDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(location: LocationSample)
 
     @Query("SELECT * FROM locations WHERE locationId = (:locationSampleId)")

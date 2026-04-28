@@ -5,12 +5,11 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.chrisbrossard.trailcompanion.data.AltitudeSample
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AltitudeSampleDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(altitude: AltitudeSample)
 
     @Query("SELECT * FROM altitudes WHERE altitudeId = (:altitudeSampleId)")

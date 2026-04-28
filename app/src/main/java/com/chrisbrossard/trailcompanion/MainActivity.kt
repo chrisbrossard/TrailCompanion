@@ -18,7 +18,6 @@ import android.location.GnssStatus
 import android.location.Location
 import android.location.LocationManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -26,7 +25,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -80,9 +78,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
     val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
         LocationServices.getFusedLocationProviderClient(this)
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalMaterial3Api::class)
-    //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -140,7 +136,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                             altitudeSessionListViewModel,
                             altitudeSessionIdViewModel,
                             altitudeRecordingViewModel,
-                            altitudeDeleteViewModel,
                             navController,
                             headingViewModel,
                             verticalSpeedViewModel,
@@ -153,9 +148,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                             locationSessionListViewModel,
                             locationSampleDao,
                             locationSessionCountViewModel,
-                            navigationViewModel,
                             chartDistanceViewModel,
-                            locationViewModel,
                             seaLevelPressureViewModel,
                         )
                     }
@@ -232,7 +225,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
 
     @OptIn(DelicateCoroutinesApi::class)
     val locationReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        @RequiresApi(Build.VERSION_CODES.O)
         override fun onReceive(context: Context, intent: Intent) {
             val location = Location("")
             location.latitude = intent.getDoubleExtra("latitude", 0.0)
@@ -285,8 +277,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
-    //@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -401,10 +391,9 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         altitudeSessionListViewModel,
                         altitudeSessionIdViewModel,
                         altitudeRecordingViewModel,
-                        altitudeDeleteViewModel,
                         navController,
                         headingViewModel,
-                       verticalSpeedViewModel,
+                        verticalSpeedViewModel,
                         pressureViewModel,
                         distanceViewModel,
                         locationListViewModel,
@@ -414,9 +403,7 @@ class MainActivity : ComponentActivity(), SensorEventListener {
                         locationSessionListViewModel,
                         locationSampleDao,
                         locationSessionCountViewModel,
-                        navigationViewModel,
                         chartDistanceViewModel,
-                        locationViewModel,
                         seaLevelPressureViewModel
                     )
                 }
@@ -448,7 +435,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         Log.d("Trail Companion", "onStart() called ")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission")
     override fun onResume() {
         super.onResume()
@@ -571,7 +557,6 @@ class MainActivity : ComponentActivity(), SensorEventListener {
         }
     }
 
-    //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onPause() {
         super.onPause()
         // This code has to be here because onResume() and onPause() are called

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StepSessionDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(stepSession: StepSession): Long
 
     @Query("SELECT * FROM step_sessions WHERE sessionId = (:stepSessionId)")

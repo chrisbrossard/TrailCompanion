@@ -1,12 +1,8 @@
 package com.chrisbrossard.trailcompanion.screens
 
-//import android.Manifest
-//import android.content.pm.PackageManager
 import android.hardware.GeomagneticField
 import android.hardware.SensorManager
 import android.location.Location
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +43,6 @@ import kotlin.math.roundToInt
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalTime::class)
 @Composable
 fun CompassScreen(

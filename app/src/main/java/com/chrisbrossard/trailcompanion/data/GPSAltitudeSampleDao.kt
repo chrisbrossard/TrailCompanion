@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GPSAltitudeSampleDao {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(gPSAltitude: GPSAltitudeSample)
 
     @Query("SELECT * FROM gps_altitudes WHERE altitudeId = (:gPSAltitudeSampleId)")

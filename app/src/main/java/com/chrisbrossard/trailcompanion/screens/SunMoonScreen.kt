@@ -1,8 +1,6 @@
 package com.chrisbrossard.trailcompanion.screens
 
 import android.location.Location
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +38,6 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SunMoonScreen(
     location: Location
